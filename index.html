@@ -1183,34 +1183,9 @@
 
     /* Motion page: BEOGRAD – title + credit overlaid on video (red title, "a film by…") */
     #playback-overlay.playback-overlay--beograd .playback-caption { display: none; }
+    /* Remove all Beograd overlay text */
     #playback-overlay .playback-video-overlay-copy {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding: 10% 12%;
-      padding-top: max(10%, 2rem);
-    }
-    #playback-overlay .playback-video-overlay-copy .playback-overlay-title {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 700;
-      color: #b91c1c;
-      -webkit-text-stroke: 2px #fff;
-      text-shadow: 0 0 1px #fff, 0 2px 6px rgba(0, 0, 0, 0.35);
-      letter-spacing: 0.02em;
-      line-height: 1.1;
-    }
-    #playback-overlay .playback-video-overlay-copy .playback-overlay-credit {
-      margin-top: 0.35em;
-      font-size: clamp(0.8rem, 2.2vw, 1rem);
-      font-weight: 500;
-      color: #000;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-      letter-spacing: 0.03em;
+      display: none !important;
     }
 
     #playback-overlay {
@@ -1768,10 +1743,8 @@
           captionEl.innerHTML = projectName ? `<span class="playback-caption-project">${projectName}</span>` : '';
         }
         
-        // Beograd overlay text
-        if (isBeograd && overlayCopy) {
-          overlayCopy.innerHTML = '<span class="playback-overlay-title">beograd</span><span class="playback-overlay-credit">a film by david milan kelly</span>';
-        } else if (overlayCopy) {
+        // Clear any existing overlay copy (we no longer show Beograd title text)
+        if (overlayCopy) {
           overlayCopy.innerHTML = '';
         }
         
