@@ -593,17 +593,32 @@
       .mobile-featured-fallback .film-beograd .mobile-fallback-video { display: block !important; visibility: visible !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
       .mobile-featured-fallback .film-beograd .grid-loop-poster-mobile { display: none !important; }
     }
-    /* Hide native play button overlay on loop videos (Safari draws it above DOM; canvas used on Safari/touch to hide) */
-    .grid-loop-video::-webkit-media-controls-overlay-play-button,
-    .grid-loop-video::-webkit-media-controls-start-playback-button,
-    .grid-loop-video::-webkit-media-controls-enclosure,
-    .mobile-fallback-video::-webkit-media-controls-overlay-play-button,
-    .mobile-fallback-video::-webkit-media-controls-start-playback-button,
-    .mobile-fallback-video::-webkit-media-controls-enclosure { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; width: 0 !important; height: 0 !important; }
+    /* Hide native play button overlays / controls on loop videos (especially iOS Safari) */
     .grid-loop-video::-webkit-media-controls,
-    .mobile-fallback-video::-webkit-media-controls { display: none !important; }
     .grid-loop-video::-webkit-media-controls-panel,
-    .mobile-fallback-video::-webkit-media-controls-panel { display: none !important; }
+    .grid-loop-video::-webkit-media-controls-play-button,
+    .grid-loop-video::-webkit-media-controls-start-playback-button,
+    .grid-loop-video::-webkit-media-controls-overlay-play-button,
+    .grid-loop-video::-webkit-media-controls-enclosure,
+    .mobile-fallback-video::-webkit-media-controls,
+    .mobile-fallback-video::-webkit-media-controls-panel,
+    .mobile-fallback-video::-webkit-media-controls-play-button,
+    .mobile-fallback-video::-webkit-media-controls-start-playback-button,
+    .mobile-fallback-video::-webkit-media-controls-overlay-play-button,
+    .mobile-fallback-video::-webkit-media-controls-enclosure,
+    video::-webkit-media-controls,
+    video::-webkit-media-controls-panel,
+    video::-webkit-media-controls-play-button,
+    video::-webkit-media-controls-start-playback-button,
+    video::-webkit-media-controls-overlay-play-button,
+    video::-webkit-media-controls-enclosure {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
     .grid-loop-video,
     .mobile-fallback-video { -webkit-appearance: none; appearance: none; }
     /* Never show native controls on loop videos */
