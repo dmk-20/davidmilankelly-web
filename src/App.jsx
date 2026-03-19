@@ -266,13 +266,15 @@ export default function App() {
     })
 
     // ===== IMAGE LOADING =====
-    document.querySelectorAll('.grid-image img').forEach(img => {
+    // PhotoItem components manage their own full-loaded class via onLoad prop.
+    // This handles any remaining .grid-image img elements (e.g. mobile fallback).
+    document.querySelectorAll('.mobile-featured-fallback .grid-image img').forEach(img => {
       const wrapper = img.closest('.grid-image-inner-wrapper')
       const markLoaded = () => wrapper?.classList.add('full-loaded')
       if (img.complete) {
-        markLoaded()
+        requestAnimationFrame(markLoaded)
       } else {
-        img.addEventListener('load', markLoaded, { once: true })
+        img.addEventListener('load', () => requestAnimationFrame(markLoaded), { once: true })
       }
     })
 
