@@ -1,4 +1,8 @@
 /* KEEPING ALL ORIGINAL STYLES - NOTHING CHANGED */
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES & RESET
+   ============================================================ */
 :root {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -16,6 +20,10 @@
     --page-padding: 2.5rem;
   }
 }
+
+/* ============================================================
+   BASE STYLES (html, body)
+   ============================================================ */
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -35,6 +43,9 @@ body {
   body { min-height: 100dvh; }
 }
 
+/* ============================================================
+   HEADER
+   ============================================================ */
 #header {
   position: relative;
   z-index: 100;
@@ -126,6 +137,9 @@ body {
   font-weight: 500;
 }
 
+/* ============================================================
+   PAGE SECTION LABEL
+   ============================================================ */
 /* Section label above grid */
 .page-section-label {
   font-size: 0.75rem;
@@ -147,6 +161,9 @@ body {
   }
 }
 
+/* ============================================================
+   VIEW: FILM
+   ============================================================ */
 /* View: Film – motion only, single column with side margins */
 body.view-film .grid-wrapper {
   grid-template-columns: 1fr;
@@ -271,6 +288,9 @@ body.view-film .film-odd-day { order: 8; }
 .film-winter .winter-film-cover { display: none; }
 body.view-film .film-winter .winter-film-cover { display: block !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
 
+/* ============================================================
+   VIEW: WORK (FEATURED)
+   ============================================================ */
 /* Featured (Work) view: 6 items – Beograd, Deja Vu, Starling, Hero (video loops), Photo (tile 5), Colourtrax (Safari: MP4 + WebM for videos) */
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .grid-item:not(.featured),
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .photo-item:not(.featured) {
@@ -351,6 +371,9 @@ body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .g
   }
 }
 
+/* ============================================================
+   VIEW: PHOTO
+   ============================================================ */
 /* View: Photo – single column grid, even spacing */
 body.view-photo .grid-wrapper {
   display: grid;
@@ -372,6 +395,9 @@ body.view-photo .photo-item {
   min-height: 0;
 }
 
+/* ============================================================
+   VIEW: INFO
+   ============================================================ */
 /* View: Info – hide grid, show placeholder with smooth fade */
 body.view-info .grid-wrapper,
 body.view-info .page-section-label { display: none !important; }
@@ -450,6 +476,9 @@ body.view-info .info-placeholder {
 .info-placeholder .info-instagram a:hover { text-decoration: underline; }
 .info-placeholder .info-instagram-icon { flex-shrink: 0; }
 
+/* ============================================================
+   PAGE LAYOUT
+   ============================================================ */
 /* Page: thin spacing between sections */
 #page {
   width: 100%;
@@ -466,6 +495,9 @@ body.view-info .info-placeholder {
   gap: var(--gap);
 }
 
+/* ============================================================
+   GRID
+   ============================================================ */
 /* 3-col grid: thin spacing */
 .grid-wrapper {
   display: grid;
@@ -490,6 +522,9 @@ body.view-info .info-placeholder {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ============================================================
+   GRID IMAGES & VIDEOS
+   ============================================================ */
 .grid-image {
   position: relative;
   width: 100%;
@@ -534,6 +569,9 @@ body.view-info .info-placeholder {
   cursor: pointer;
 }
 
+/* ============================================================
+   MOBILE VIDEO BEHAVIOR
+   ============================================================ */
 /* Mobile (≤767px): poster-only on Featured / non-Film views to avoid native play button;
    on Film view we keep the actual looping videos visible. Beograd cell always shows video loop. */
 .grid-loop-poster-mobile { display: none; }
@@ -576,6 +614,10 @@ body.view-info .info-placeholder {
   .mobile-featured-fallback .film-beograd .mobile-fallback-video { display: block !important; visibility: visible !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
   .mobile-featured-fallback .film-beograd .grid-loop-poster-mobile { display: none !important; }
 }
+
+/* ============================================================
+   VIDEO CONTROLS (webkit pseudo-elements)
+   ============================================================ */
 /* Hide native play button overlays / controls on loop videos (especially iOS Safari) */
 .grid-loop-video::-webkit-media-controls,
 .grid-loop-video::-webkit-media-controls-panel,
@@ -611,6 +653,10 @@ video.grid-loop-video::-webkit-media-controls-panel,
 video.mobile-fallback-video::-webkit-media-controls-panel { display: none !important; }
 video.grid-loop-video::-webkit-media-controls-play-button,
 video.mobile-fallback-video::-webkit-media-controls-play-button { display: none !important; }
+
+/* ============================================================
+   SAFARI OVERRIDES
+   ============================================================ */
 /* Safari: move video off-screen so it can still play (visibility:hidden can block playback); canvas on top shows frames */
 .grid-image-inner-wrapper.video-canvas-mode .grid-loop-video,
 .grid-image-inner-wrapper.video-canvas-mode .mobile-fallback-video {
@@ -758,6 +804,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 .grid-item.played,
 .photo-item.played { will-change: auto; }
 
+/* ============================================================
+   PHOTO ITEMS
+   ============================================================ */
 .photo-item {
   display: block;
   width: 100%;
@@ -795,6 +844,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 .grid-item.grid-item-aspect-3-2 .grid-image-inner-wrapper { position: absolute; inset: 0; }
 .grid-item.grid-item-aspect-3-2 .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 
+/* ============================================================
+   PHOTO LIGHTBOX
+   ============================================================ */
 #photo-lightbox {
   position: fixed;
   inset: 0;
@@ -896,6 +948,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 #photo-lightbox .photo-lightbox-prev:hover,
 #photo-lightbox .photo-lightbox-next:hover { color: rgba(255, 255, 255, 0.85); }
 
+/* ============================================================
+   RESPONSIVE (MOBILE BREAKPOINTS)
+   ============================================================ */
 @media (max-width: 767px), (hover: none) {
   #photo-lightbox .photo-lightbox-prev,
   #photo-lightbox .photo-lightbox-next {
@@ -995,6 +1050,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
   body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper { grid-template-columns: 1fr; }
 }
 
+/* ============================================================
+   MOBILE FALLBACK
+   ============================================================ */
 /* Mobile fallback: simple stack (no grid) so Safari always shows content */
 .mobile-featured-fallback { display: none; }
 .mobile-featured-fallback a,
@@ -1055,6 +1113,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
   /* Work view on mobile: same as desktop – main grid, 1 column, same video loops (no fallback) */
 }
 
+/* ============================================================
+   MOBILE ANIMATIONS
+   ============================================================ */
 /* Mobile: fast scale-in, GPU-accelerated */
 @media (max-width: 767px) {
   body { -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
@@ -1135,6 +1196,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
   }
 }
 
+/* ============================================================
+   PLAYBACK OVERLAY
+   ============================================================ */
 /* Playback overlay – on Work page only: match photo lightbox (cell 5) – dark but see-through. */
 #playback-overlay.playback-overlay--work {
   background: rgba(0, 0, 0, 0.78);
