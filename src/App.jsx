@@ -6,6 +6,7 @@ import PlaybackOverlay from './components/PlaybackOverlay.jsx'
 import VideoGridItem from './components/VideoGridItem'
 import PhotoItem from './components/PhotoItem'
 import { videoPosters } from './videoPosters.js'
+import { photoPosters } from './photoPosters.js'
 
 export default function App() {
   const initialized = useRef(false)
@@ -266,12 +267,12 @@ export default function App() {
 
     // ===== IMAGE LOADING =====
     document.querySelectorAll('.grid-image img').forEach(img => {
-      if (!img.complete) {
-        img.style.opacity = '0'
-        img.onload = () => {
-          img.style.transition = 'opacity 0.3s ease'
-          img.style.opacity = '1'
-        }
+      const wrapper = img.closest('.grid-image-inner-wrapper')
+      const markLoaded = () => wrapper?.classList.add('full-loaded')
+      if (img.complete) {
+        markLoaded()
+      } else {
+        img.addEventListener('load', markLoaded, { once: true })
       }
     })
 
@@ -497,7 +498,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <PhotoItem className="featured featured-5" photoSrc="/images/1.jpg" src="/images/1.jpg" />
+          <PhotoItem className="featured featured-5" photoSrc="/images/1.jpg" src="/images/1.jpg" poster={photoPosters['1']} />
 
           <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax featured featured-6" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.colourtrax})` }} />
@@ -507,21 +508,21 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <PhotoItem className="photo-tab-only" photoSrc="/images/1.jpg" src="/images/1.jpg" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/3.jpg" src="/images/3.jpg" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/billboard-frost-children.png" src="/images/billboard-frost-children.png" alt="Billboard frost children" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2girls-from-hero-jpg.webp" src="/images/2girls-from-hero-jpg.webp" alt="2 girls from hero" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-edgy.webp" src="/images/colourtrax-edgy.webp" alt="Colourtrax edgy" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-cloe.webp" src="/images/colourtrax-cloe.webp" alt="Colourtrax cloe" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/1.jpg" src="/images/1.jpg" poster={photoPosters['1']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/3.jpg" src="/images/3.jpg" poster={photoPosters['3']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/billboard-frost-children.png" src="/images/billboard-frost-children.png" alt="Billboard frost children" poster={photoPosters['billboard_frost_children']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" poster={photoPosters['2']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" poster={photoPosters['catherine']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2girls-from-hero-jpg.webp" src="/images/2girls-from-hero-jpg.webp" alt="2 girls from hero" poster={photoPosters['2girls_from_hero_jpg']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" poster={photoPosters['herophototif']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-edgy.webp" src="/images/colourtrax-edgy.webp" alt="Colourtrax edgy" poster={photoPosters['colourtrax_edgy']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-cloe.webp" src="/images/colourtrax-cloe.webp" alt="Colourtrax cloe" poster={photoPosters['colourtrax_cloe']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" poster={photoPosters['sofia']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" poster={photoPosters['juliemain']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" poster={photoPosters['frost_billboard']} />
         </div>
       </main>
     </>

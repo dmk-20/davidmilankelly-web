@@ -1419,6 +1419,22 @@ body.view-photo #photo-lightbox.open .photo-lightbox-next { display: flex !impor
   opacity: 0;
 }
 
+/* Photo img — fades in over poster */
+.grid-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+.grid-image-inner-wrapper.full-loaded img {
+  opacity: 1;
+}
+
 /* Full video — fades in over poster */
 .grid-image .grid-loop-video {
   position: absolute;
