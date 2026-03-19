@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import Header from './components/Header.jsx'
 
 export default function App() {
   const initialized = useRef(false)
@@ -433,23 +434,7 @@ export default function App() {
         <img id="photo-lightbox-img" src="" alt="" />
       </div>
 
-      {/* Header */}
-      <header id="header">
-        <div className="header-title">
-          <a href="#">david milan kelly</a>
-        </div>
-        <div className="header-nav-wrap">
-          <button type="button" className="header-menu-btn" aria-label="Menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-          </button>
-          <nav className="header-nav">
-            <a href="#" data-view="work">Work</a>
-            <a href="#film" data-view="film">Film</a>
-            <a href="#photo" data-view="photo">Photo</a>
-            <a href="#info" data-view="info">Info</a>
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       <main id="page" role="main">
         <p className="page-section-label" id="page-section-label" aria-hidden="true">FEATURED WORK</p>
