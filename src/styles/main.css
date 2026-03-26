@@ -937,6 +937,9 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
     background: transparent;
   }
   #photo-lightbox .photo-lightbox-next { left: auto; right: 12px; }
+  #photo-lightbox .photo-lightbox-prev,
+  #photo-lightbox .photo-lightbox-next,
+  #photo-lightbox .photo-lightbox-close { display: none !important; }
 }
 
 @media (max-width: 767px) {
@@ -1379,6 +1382,17 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 #photo-lightbox .photo-lightbox-next { display: none !important; }
 body.view-photo #photo-lightbox.open .photo-lightbox-prev,
 body.view-photo #photo-lightbox.open .photo-lightbox-next { display: flex !important; }
+/* Hide all lightbox controls (chevrons + close) on small/touch screens */
+@media (max-width: 767px), (hover: none) {
+  #photo-lightbox .photo-lightbox-prev,
+  #photo-lightbox .photo-lightbox-next,
+  #photo-lightbox .photo-lightbox-close,
+  body.view-photo #photo-lightbox.open .photo-lightbox-prev,
+  body.view-photo #photo-lightbox.open .photo-lightbox-next,
+  #playback-overlay .playback-prev,
+  #playback-overlay .playback-next,
+  #playback-overlay .playback-close { display: none !important; }
+}
 
 /* ============================================================
    BLUR PLACEHOLDER LOADING

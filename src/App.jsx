@@ -408,14 +408,47 @@ export default function App() {
     }
 
     // ===== VIDEO LOADING =====
-    // poster shows instantly (base64, no network) → all full videos load in parallel
-    document.querySelectorAll('.grid-wrapper .grid-loop-video').forEach(video => {
-      video.preload = 'auto'
-      video.load()
-      video.addEventListener('canplay', () => {
+    // Load videos lazily as they enter the viewport to avoid saturating mobile bandwidth.
+    // Falls back to loadeddata if canplay is slow, and marks full-loaded on error/emptied
+    // so the blur poster never gets stuck.
+    const loadVideo = (video) => {
+      if (video.dataset.loadStarted) return
+      video.dataset.loadStarted = '1'
+
+      // If no usable sources remain (e.g. iOS stripped WebM-only videos), skip
+      const hasSrc = video.src || video.querySelector('source')
+      if (!hasSrc) {
+        video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
+        return
+      }
+
+      const markLoaded = () => {
         video.play().catch(() => {})
         video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
+      }
+
+      video.addEventListener('canplay', markLoaded, { once: true })
+      video.addEventListener('loadeddata', markLoaded, { once: true })
+      // Fallback: if video errors or has no sources, still remove the blur
+      video.addEventListener('error', () => {
+        video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
       }, { once: true })
+
+      video.preload = 'auto'
+      video.load()
+    }
+
+    const loadObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadVideo(entry.target)
+          loadObserver.unobserve(entry.target)
+        }
+      })
+    }, { rootMargin: '200px' })
+
+    document.querySelectorAll('.grid-wrapper .grid-loop-video').forEach(video => {
+      loadObserver.observe(video)
     })
 
   }, [])
