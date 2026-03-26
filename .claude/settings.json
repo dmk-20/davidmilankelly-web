@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Search",
+      "WebSearch",
+      "WebFetch",
+      "Bash"
+    ]
+  }
+}
