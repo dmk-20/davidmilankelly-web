@@ -15,6 +15,10 @@ export default function App() {
     if (initialized.current) return
     initialized.current = true
 
+    // ===== VIDEO ITEM TRACKING =====
+    const videoItems = Array.from(document.querySelectorAll('.grid-item[data-video-type]'))
+    let currentVideoIndex = 0
+
     // ===== SIMPLE VIEW MANAGER =====
     const viewLabels = { work: 'FEATURED WORK', film: 'Film', photo: 'Photography' }
     const labelEl = document.getElementById('page-section-label')
@@ -79,6 +83,10 @@ export default function App() {
           : ''
 
       if (!src) return false
+
+      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      const vIdx = visibleVideoItems.indexOf(link)
+      if (vIdx !== -1) currentVideoIndex = vIdx
 
       const isBeograd = id === 'pR-9xte4bgg' || link.classList.contains('film-beograd')
 
@@ -199,10 +207,12 @@ export default function App() {
     })
 
     let currentPhotoIndex = 0
-    document.querySelectorAll('.photo-item[data-photo-src]').forEach((item, i) => {
+    document.querySelectorAll('.photo-item[data-photo-src]').forEach((item) => {
       item.addEventListener('click', (e) => {
         e.preventDefault()
-        currentPhotoIndex = i
+        const visibleItems = photoItems.filter(el => el.offsetParent !== null)
+        const idx = visibleItems.indexOf(item)
+        currentPhotoIndex = idx !== -1 ? idx : 0
         openPhoto(item.getAttribute('data-photo-src'))
       })
     })
@@ -221,15 +231,29 @@ export default function App() {
       openPhoto(visibleItems[currentPhotoIndex].getAttribute('data-photo-src'))
     })
 
+    document.querySelector('.playback-prev')?.addEventListener('click', () => {
+      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      if (!visibleVideoItems.length) return
+      currentVideoIndex = (currentVideoIndex - 1 + visibleVideoItems.length) % visibleVideoItems.length
+      window.openVideoPlayback(visibleVideoItems[currentVideoIndex])
+    })
+
+    document.querySelector('.playback-next')?.addEventListener('click', () => {
+      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      if (!visibleVideoItems.length) return
+      currentVideoIndex = (currentVideoIndex + 1) % visibleVideoItems.length
+      window.openVideoPlayback(visibleVideoItems[currentVideoIndex])
+    })
+
     document.querySelector('.playback-close')?.addEventListener('click', closePlayback)
     document.querySelector('.photo-lightbox-close')?.addEventListener('click', closePhotoLightbox)
 
     document.getElementById('playback-overlay')?.addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closePlayback()
+      if (!e.target.closest('.playback-prev, .playback-next, .playback-inner')) closePlayback()
     })
 
     document.getElementById('photo-lightbox')?.addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) closePhotoLightbox()
+      if (!e.target.closest('.photo-lightbox-prev, .photo-lightbox-next, #photo-lightbox-img')) closePhotoLightbox()
     })
 
     document.addEventListener('keydown', (e) => {
@@ -408,25 +432,25 @@ export default function App() {
         {/* Mobile fallback (always display:none — paths updated, no tiny needed) */}
         <div className="mobile-featured-fallback" aria-hidden="false">
           <VideoGridItem className="film-beograd featured featured-1" href="#" videoType="youtube" videoId="pR-9xte4bgg" caption="BEOGRAD">
-            <video className="mobile-fallback-video grid-loop-video" autoPlay loop muted playsInline preload="auto" fetchPriority="high">
+            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="auto" fetchPriority="high">
               <source src="/videos/beograd-loop.webm" type="video/webm" />
               <source src="/videos/beograd-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
           <VideoGridItem className="grid-item-aspect-3-2 film-deja-vu featured featured-2" href="#" videoType="vimeo" videoId="799266927" caption="DEJA VU LIQUOR">
-            <video className="mobile-fallback-video grid-loop-video" autoPlay loop muted playsInline preload="metadata">
+            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
               <source src="/videos/dejavu-loop.webm" type="video/webm" />
               <source src="/videos/dejavu-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
           <VideoGridItem className="film-starling featured featured-3" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
-            <video className="mobile-fallback-video grid-loop-video" autoPlay loop muted playsInline preload="metadata">
+            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
               <source src="/videos/starling-loop.webm" type="video/webm" />
               <source src="/videos/starling-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
           <VideoGridItem className="film-hero featured featured-4" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
-            <video className="mobile-fallback-video grid-loop-video" autoPlay loop muted playsInline preload="metadata">
+            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
               <source src="/videos/hero-loop.webm" type="video/webm" />
               <source src="/videos/hero-loop.mp4" type="video/mp4" />
             </video>
@@ -436,7 +460,7 @@ export default function App() {
             <span className="film-item-caption">Photo</span>
           </div>
           <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax featured featured-6" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
-            <video className="mobile-fallback-video grid-loop-video" autoPlay loop muted playsInline preload="metadata">
+            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
               <source src="/videos/colourtrax-loop.webm" type="video/webm" />
               <source src="/videos/colourtrax-loop.mp4" type="video/mp4" />
             </video>
@@ -449,7 +473,7 @@ export default function App() {
         <div className="grid-wrapper">
           <VideoGridItem className="film-beograd featured featured-1" href="#" videoType="youtube" videoId="pR-9xte4bgg" caption="BEOGRAD">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.beograd})` }} />
-            <video id="beograd-video" className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video id="beograd-video" className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/beograd-loop.webm" type="video/webm" />
               <source src="/videos/beograd-loop.mp4" type="video/mp4" />
             </video>
@@ -457,7 +481,7 @@ export default function App() {
 
           <VideoGridItem className="grid-item-aspect-3-2 film-deja-vu featured featured-2" href="#" videoType="vimeo" videoId="799266927" caption="DEJA VU LIQUOR">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.dejavu})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/dejavu-loop.webm" type="video/webm" />
               <source src="/videos/dejavu-loop.mp4" type="video/mp4" />
             </video>
@@ -465,7 +489,7 @@ export default function App() {
 
           <VideoGridItem className="film-starling featured featured-3" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.starling})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/starling-loop.webm" type="video/webm" />
               <source src="/videos/starling-loop.mp4" type="video/mp4" />
             </video>
@@ -473,7 +497,7 @@ export default function App() {
 
           <VideoGridItem className="film-hero featured featured-4" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.hero})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/hero-loop.webm" type="video/webm" />
               <source src="/videos/hero-loop.mp4" type="video/mp4" />
             </video>
@@ -481,21 +505,21 @@ export default function App() {
 
           <VideoGridItem className="film-freefall" href="javascript:void(0)" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.freefall})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/freefall-loop.webm" type="video/webm" />
             </video>
           </VideoGridItem>
 
           <VideoGridItem className="film-winter" href="javascript:void(0)" videoType="youtube" videoId="OjzvAPvmASw" caption="Winter">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.winter})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/winter-loop.webm" type="video/webm" />
             </video>
           </VideoGridItem>
 
           <VideoGridItem className="film-odd-day" href="javascript:void(0)" videoType="youtube" videoId="E6EhtnpuW24" caption="ODD DAY">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.odd_day})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/odd-day-loop.webm" type="video/webm" />
             </video>
           </VideoGridItem>
@@ -504,7 +528,7 @@ export default function App() {
 
           <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax featured featured-6" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.colourtrax})` }} />
-            <video className="grid-loop-video" autoPlay loop muted playsInline preload="none">
+            <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/colourtrax-loop.webm" type="video/webm" />
               <source src="/videos/colourtrax-loop.mp4" type="video/mp4" />
             </video>
