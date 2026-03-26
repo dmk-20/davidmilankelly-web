@@ -1,0 +1,1432 @@
+/* KEEPING ALL ORIGINAL STYLES - NOTHING CHANGED */
+
+/* ============================================================
+   CSS CUSTOM PROPERTIES & RESET
+   ============================================================ */
+:root {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  --color: #000;
+  --accent: #000;
+  --link-color: #000;
+  --background: #fff;
+  --surface: #000;
+  --gap: 4px;
+  --page-padding: clamp(8px, 1vw, 16px);
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (min-width: 768px) {
+  :root {
+    --page-padding: 2.5rem;
+  }
+}
+
+/* ============================================================
+   BASE STYLES (html, body)
+   ============================================================ */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  color: var(--color);
+  background: var(--background);
+  -webkit-text-size-adjust: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  transition: background-color 0.3s var(--transition-smooth);
+}
+@supports (min-height: 100dvh) {
+  body { min-height: 100dvh; }
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header {
+  position: relative;
+  z-index: 100;
+  background: #fff;
+  padding: 24px var(--page-padding);
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-left: max(var(--page-padding), env(safe-area-inset-left));
+  padding-right: max(var(--page-padding), env(safe-area-inset-right));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  transition: transform 0.2s var(--transition-smooth);
+}
+
+.header-title {
+  grid-column: 1;
+}
+
+.header-nav {
+  display: flex;
+  gap: 1.5em;
+  justify-content: center;
+}
+.header-nav-wrap {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-menu-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: inherit;
+  color: #000;
+}
+.header-menu-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.3s var(--transition-smooth), opacity 0.2s var(--transition-smooth);
+}
+
+.header-title a {
+  color: #000;
+  text-decoration: none;
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.header-nav a {
+  color: #000;
+  text-decoration: none;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  position: relative;
+  transition: color 0.2s var(--transition-smooth);
+}
+
+.header-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #000;
+  transition: width 0.3s var(--transition-smooth);
+}
+
+.header-nav a:hover::after,
+.header-nav a[aria-current="page"]::after {
+  width: 100%;
+}
+
+.header-nav a[aria-current="page"] {
+  color: #000;
+  font-weight: 500;
+}
+
+/* ============================================================
+   PAGE SECTION LABEL
+   ============================================================ */
+/* Section label above grid */
+.page-section-label {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 2px 0;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: labelFadeIn 0.4s var(--transition-smooth) forwards;
+}
+
+@keyframes labelFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   VIEW: FILM
+   ============================================================ */
+/* View: Film – motion only, single column with side margins */
+body.view-film .grid-wrapper {
+  grid-template-columns: 1fr;
+  max-width: 54%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  row-gap: 0.6rem;
+  column-gap: 0;
+}
+body.view-film .photo-item { display: none !important; }
+
+/* Film item lower-third caption (visible only on Film view) */
+.film-item-caption {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  pointer-events: none;
+  z-index: 3;
+}
+body.view-film .grid-item .film-item-caption { display: block; }
+body.view-film .grid-item.hide-on-film-view { display: none !important; }
+/* Film page: 16:9 video with caption overlaid (lower-third) */
+body.view-film .grid-item .grid-image { aspect-ratio: 16 / 9; height: auto; }
+body.view-film .grid-item .grid-image-inner-wrapper { position: absolute; inset: 0; }
+body.view-film .grid-item .grid-image img,
+body.view-film .grid-item .grid-image video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transition: transform 0.4s var(--transition-smooth);
+}
+body.view-film .grid-item:hover .grid-image img,
+body.view-film .grid-item:hover .grid-image video {
+  transform: scale(1.02);
+}
+/* BEOGRAD: Featured view = intro clip only; Film tab = same intro clip */
+.film-beograd .beograd-film-cover { display: none; }
+body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd .beograd-film-cover { display: none !important; }
+body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd #beograd-video { display: block !important; position: relative; z-index: 1; }
+body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd .grid-loop-video:not(#beograd-video) { display: none !important; }
+/* Below-fold grid items: skip layout/paint until near viewport (faster mobile load) */
+@media (max-width: 767px) {
+  .grid-wrapper .grid-item,
+  .grid-wrapper .photo-item { content-visibility: auto; contain-intrinsic-size: auto 180px; }
+}
+/* Work view: ensure all featured video elements are visible (loops show, not blank) */
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image-inner-wrapper video {
+  display: block !important;
+  visibility: visible !important;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+/* Safari (Work view): force Beograd cell to show video, not fallback/poster image */
+body.safari.view-work .film-beograd .beograd-film-cover,
+html.safari body.view-work .film-beograd .beograd-film-cover { display: none !important; }
+body.safari.view-work .film-beograd .video-poster-cover,
+html.safari body.view-work .film-beograd .video-poster-cover { display: none !important; opacity: 0 !important; pointer-events: none !important; }
+body.safari.view-work .film-beograd #beograd-video,
+html.safari body.view-work .film-beograd #beograd-video { display: block !important; visibility: visible !important; z-index: 1; }
+/* Hide Safari fallback thumbnails so video loops always show (desktop); mobile uses poster-only CSS */
+.film-deja-vu .dejavu-safari-thumb,
+.film-starling .starling-safari-thumb,
+.film-colourtrax .colourtrax-safari-thumb,
+.film-hero .hero-safari-thumb {
+  display: none !important;
+}
+body.view-film .film-beograd .beograd-film-cover { display: none !important; }
+body.view-film .film-beograd #beograd-video {
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}
+body.view-film .film-beograd .beograd-film-trailer { display: none !important; }
+body:not(.view-film) .film-beograd .beograd-film-trailer { display: none !important; }
+body.view-film .film-beograd .grid-loop-video-canvas,
+body.view-film .film-beograd .video-tap-overlay { display: none !important; }
+/* Film view: overlay tappable for non-Beograd items so tap opens lightbox */
+body.view-film .grid-wrapper .grid-item[data-video-type]:not(.film-beograd) .grid-image-inner-wrapper .video-tap-overlay {
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Motion page: column order – Deja Vu second */
+body.view-film .film-beograd { order: 1; }
+body.view-film .film-deja-vu { order: 2; }
+body.view-film .film-starling { order: 3; }
+body.view-film .film-colourtrax { order: 4; }
+body.view-film .film-hero { order: 5; }
+body.view-film .film-freefall { order: 6; }
+body.view-film .film-winter { order: 7; }
+body.view-film .film-odd-day { order: 8; }
+.film-winter .winter-film-cover { display: none; }
+body.view-film .film-winter .winter-film-cover { display: block !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
+
+/* ============================================================
+   VIEW: WORK (FEATURED)
+   ============================================================ */
+/* Featured (Work) view: 6 items – Beograd, Deja Vu, Starling, Hero (video loops), Photo (tile 5), Colourtrax (Safari: MP4 + WebM for videos) */
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .grid-item:not(.featured),
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .photo-item:not(.featured) {
+  display: none !important;
+}
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-1 { order: 1; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-2 { order: 2; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-3 { order: 3; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-4 { order: 4; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-5 { order: 5; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-6 { order: 6; }
+/* Featured: 3x2 grid, generous margins to match reference spacing */
+body:not(.view-film):not(.view-photo):not(.view-info) #page {
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+  padding-bottom: 5rem;
+}
+@media (min-width: 768px) {
+  body:not(.view-film):not(.view-photo):not(.view-info) #page {
+    padding-top: 5rem;
+  }
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper {
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (max-width: 767px) {
+  body:not(.view-film):not(.view-photo):not(.view-info) #page {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+  }
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image {
+    min-height: 40vw;
+  }
+}
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 100%;
+  width: 100%;
+  gap: 4px;
+}
+/* Featured: 16:9 on every tile, natural height (min-height fallback for Safari without aspect-ratio) */
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+@supports not (aspect-ratio: 1 / 1) {
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image {
+    height: 0;
+    padding-bottom: 56.25%;
+    position: relative;
+  }
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image-inner-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image-inner-wrapper {
+  position: absolute;
+  inset: 0;
+}
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image img,
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .grid-image video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Featured: 2 columns when windowed / medium desktop */
+@media (max-width: 1024px) and (min-width: 768px) {
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================================
+   VIEW: PHOTO
+   ============================================================ */
+/* View: Photo – single column grid, even spacing */
+body.view-photo .grid-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto;
+  row-gap: 4px;
+  column-gap: 0;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+body.view-photo .grid-item { display: none !important; order: 1; }
+body:not(.view-photo) .photo-item.photo-tab-only { display: none !important; }
+body.view-photo .photo-item.featured { display: none !important; }
+body.view-photo .photo-item {
+  order: 0;
+  margin: 0;
+  min-height: 0;
+}
+
+/* ============================================================
+   VIEW: INFO
+   ============================================================ */
+/* View: Info – hide grid, show placeholder with smooth fade */
+body.view-info .grid-wrapper,
+body.view-info .page-section-label { display: none !important; }
+body.view-info .info-placeholder {
+  display: block;
+  animation: infoFadeIn 0.5s var(--transition-smooth);
+}
+
+@keyframes infoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-placeholder {
+  display: none;
+  padding: 8rem var(--page-padding) 6rem;
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  line-height: 1.6;
+  text-align: left;
+  opacity: 0;
+}
+body.view-info .info-placeholder {
+  opacity: 1;
+}
+.info-placeholder p {
+  margin-bottom: 1rem;
+  transform: translateY(0);
+  transition: transform 0.3s var(--transition-smooth);
+}
+.info-placeholder p:hover {
+  transform: translateX(5px);
+}
+.info-placeholder .info-heading {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.25rem;
+  text-decoration: underline;
+}
+.info-placeholder h2 {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  margin: 0 0 0.5rem 0;
+}
+.info-placeholder p { margin-bottom: 1rem; }
+.info-placeholder .info-email { margin-top: 1rem; margin-bottom: 0; }
+.info-placeholder .info-email a { color: inherit; text-decoration: none; }
+.info-placeholder .info-email a:hover { text-decoration: underline; }
+.info-placeholder .info-instagram { margin-top: 1rem; margin-bottom: 0; }
+.info-placeholder .info-instagram a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+.info-placeholder .info-instagram a:hover { text-decoration: underline; }
+.info-placeholder .info-instagram-icon { flex-shrink: 0; }
+
+/* ============================================================
+   PAGE LAYOUT
+   ============================================================ */
+/* Page: thin spacing between sections */
+#page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: var(--page-padding);
+  padding-top: var(--page-padding);
+  padding-bottom: max(var(--page-padding), env(safe-area-inset-bottom));
+  padding-left: max(var(--page-padding), env(safe-area-inset-left));
+  padding-right: max(var(--page-padding), env(safe-area-inset-right));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
+/* 3-col grid: thin spacing */
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: var(--gap);
+  column-gap: var(--gap);
+  width: 100%;
+  max-width: 100%;
+  align-items: stretch;
+  contain: layout;
+}
+.grid-wrapper > * { min-height: 0; }
+
+.grid-item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  animation: gridItemIn 0.5s var(--transition-smooth) both;
+  -webkit-animation: gridItemIn 0.5s var(--transition-smooth) both;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   GRID IMAGES & VIDEOS
+   ============================================================ */
+.grid-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #f0f0f0; /* Placeholder background */
+}
+
+.grid-image-inner-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.grid-image img,
+.grid-image video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transition: transform 0.4s var(--transition-smooth), opacity 0.3s var(--transition-smooth);
+}
+
+/* Smooth image loading */
+.grid-image img {
+  opacity: 0;
+  animation: imageFadeIn 0.4s var(--transition-smooth) forwards;
+}
+
+@keyframes imageFadeIn {
+  to { opacity: 1; }
+}
+
+.grid-item:hover .grid-image img,
+.grid-item:hover .grid-image video {
+  transform: scale(1.03);
+}
+
+.grid-item:hover,
+.photo-item:hover {
+  cursor: pointer;
+}
+
+/* ============================================================
+   MOBILE VIDEO BEHAVIOR
+   ============================================================ */
+/* Mobile (≤767px): poster-only on Featured / non-Film views to avoid native play button;
+   on Film view we keep the actual looping videos visible. Beograd cell always shows video loop. */
+.grid-loop-poster-mobile { display: none; }
+@media (max-width: 767px) {
+  body:not(.view-film) .grid-wrapper .grid-image-inner-wrapper .grid-loop-video,
+  body:not(.view-film) .grid-wrapper .grid-image-inner-wrapper .mobile-fallback-video,
+  body:not(.view-film) .grid-wrapper .grid-image-inner-wrapper .grid-loop-video-canvas { display: none !important; }
+  body:not(.view-film) .grid-wrapper .grid-image-inner-wrapper .grid-loop-poster-mobile {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Beograd: always show video loop on featured, never poster */
+  body:not(.view-film) .film-beograd .grid-loop-video,
+  body:not(.view-film) .film-beograd .mobile-fallback-video,
+  body:not(.view-film) .film-beograd #beograd-video { display: block !important; visibility: visible !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  body:not(.view-film) .film-beograd .grid-loop-poster-mobile,
+  body:not(.view-film) .film-beograd .beograd-film-cover { display: none !important; }
+  .mobile-featured-fallback .grid-image-inner-wrapper .grid-loop-video,
+  .mobile-featured-fallback .grid-image-inner-wrapper .mobile-fallback-video,
+  .mobile-featured-fallback .grid-image-inner-wrapper .grid-loop-video-canvas { display: none !important; }
+  .mobile-featured-fallback .grid-image-inner-wrapper .grid-loop-poster-mobile {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .mobile-featured-fallback .film-beograd .grid-loop-video,
+  .mobile-featured-fallback .film-beograd .mobile-fallback-video { display: block !important; visibility: visible !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .mobile-featured-fallback .film-beograd .grid-loop-poster-mobile { display: none !important; }
+}
+
+/* ============================================================
+   VIDEO CONTROLS (webkit pseudo-elements)
+   ============================================================ */
+/* Hide native play button overlays / controls on loop videos (especially iOS Safari) */
+.grid-loop-video::-webkit-media-controls,
+.grid-loop-video::-webkit-media-controls-panel,
+.grid-loop-video::-webkit-media-controls-play-button,
+.grid-loop-video::-webkit-media-controls-start-playback-button,
+.grid-loop-video::-webkit-media-controls-overlay-play-button,
+.grid-loop-video::-webkit-media-controls-enclosure,
+.mobile-fallback-video::-webkit-media-controls,
+.mobile-fallback-video::-webkit-media-controls-panel,
+.mobile-fallback-video::-webkit-media-controls-play-button,
+.mobile-fallback-video::-webkit-media-controls-start-playback-button,
+.mobile-fallback-video::-webkit-media-controls-overlay-play-button,
+.mobile-fallback-video::-webkit-media-controls-enclosure,
+video::-webkit-media-controls,
+video::-webkit-media-controls-panel,
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-overlay-play-button,
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.grid-loop-video,
+.mobile-fallback-video { -webkit-appearance: none; appearance: none; }
+/* Never show native controls on loop videos */
+.grid-loop-video[controls],
+.mobile-fallback-video[controls] { display: block; }
+video.grid-loop-video::-webkit-media-controls-panel,
+video.mobile-fallback-video::-webkit-media-controls-panel { display: none !important; }
+video.grid-loop-video::-webkit-media-controls-play-button,
+video.mobile-fallback-video::-webkit-media-controls-play-button { display: none !important; }
+
+/* ============================================================
+   SAFARI OVERRIDES
+   ============================================================ */
+/* Safari: move video off-screen so it can still play (visibility:hidden can block playback); canvas on top shows frames */
+.grid-image-inner-wrapper.video-canvas-mode .grid-loop-video,
+.grid-image-inner-wrapper.video-canvas-mode .mobile-fallback-video {
+  position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; z-index: 0;
+  clip-path: inset(0);
+}
+/* Safari: keep video in viewport so it can decode/play; canvas still on top draws frames (off-screen breaks Safari playback) */
+html.safari body.view-work .grid-image-inner-wrapper.video-canvas-mode .grid-loop-video,
+body.safari.view-work .grid-image-inner-wrapper.video-canvas-mode .grid-loop-video {
+  position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; clip-path: none !important;
+}
+/* Safari: own compositor layer for video+canvas to reduce freeze/jank */
+.grid-image-inner-wrapper.video-canvas-mode {
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* Video doesn't receive taps so overlay can; reduces native control focus on iOS */
+.grid-image .grid-loop-video { pointer-events: none; }
+/* Desktop: cover video with poster until it is playing so Safari play button is never visible */
+.grid-image-inner-wrapper .video-poster-cover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--background, #fff);
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.06s ease-out;
+}
+.grid-image-inner-wrapper.video-playing .video-poster-cover {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .grid-image-inner-wrapper .video-poster-cover { display: none !important; }
+}
+/* Safari/WebM fallback: when video fails, poster image is shown */
+.grid-image .grid-loop-poster-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+/* Canvas used on touch to hide Safari's native play button; video plays behind it */
+.grid-image .grid-loop-video-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  background: var(--background, #fff);
+  z-index: 1;
+  transform: translateZ(0);
+  isolation: isolate;
+}
+.video-tap-overlay { display: none !important; }
+/* Work view: show overlay so tap/click opens extended player (desktop + mobile) */
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .grid-item[data-video-type] .grid-image-inner-wrapper .video-tap-overlay,
+body:not(.view-film):not(.view-photo):not(.view-info) .mobile-featured-fallback .grid-item[data-video-type] .grid-image-inner-wrapper .video-tap-overlay {
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.grid-image-inner-wrapper.placeholder {
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #000;
+}
+
+@keyframes gridItemIn {
+  from { opacity: 0; transform: scale(0.94); -webkit-transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); -webkit-transform: scale(1); }
+}
+/* Safari: match Chrome – force Work view grid and all 6 featured cells (video loops + photo) visible and sized like Chrome */
+html.safari body.view-work .grid-wrapper {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+html.safari body.view-work .grid-wrapper .grid-item.featured,
+html.safari body.view-work .grid-wrapper .photo-item.featured {
+  display: block !important;
+  visibility: visible !important;
+}
+@media (min-width: 768px) {
+  html.safari body.view-work .grid-wrapper .grid-item.featured,
+  html.safari body.view-work .grid-wrapper .photo-item.featured {
+    opacity: 1 !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+  }
+}
+html.safari body.view-work .grid-wrapper .featured .grid-image {
+  display: block !important;
+  visibility: visible !important;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+html.safari body.view-work .grid-wrapper .featured .grid-image-inner-wrapper,
+html.safari body.view-work .grid-wrapper .featured .grid-image video,
+html.safari body.view-work .grid-wrapper .featured .grid-image img {
+  display: block !important;
+  visibility: visible !important;
+}
+/* Safari desktop: still hide specific fallback thumbs so loops sit on top */
+html.safari body.view-work .film-deja-vu .dejavu-safari-thumb,
+html.safari body.view-work .film-starling .starling-safari-thumb,
+html.safari body.view-work .film-colourtrax .colourtrax-safari-thumb,
+html.safari body.view-work .film-hero .hero-safari-thumb {
+  display: none !important;
+  visibility: hidden !important;
+}
+@media (min-width: 768px) {
+  body.safari.view-work .grid-wrapper .grid-item.featured,
+  body.safari.view-work .grid-wrapper .photo-item.featured {
+    animation: none !important;
+    -webkit-animation: none !important;
+    opacity: 1 !important;
+  }
+}
+body.safari.view-work .grid-wrapper .grid-item.featured,
+body.safari.view-work .grid-wrapper .photo-item.featured {
+  visibility: visible !important;
+}
+body.safari.view-work .grid-wrapper .featured .grid-image {
+  min-height: 20vw;
+}
+.grid-item.animating,
+.photo-item.animating { will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.grid-item.played,
+.photo-item.played { will-change: auto; }
+
+/* ============================================================
+   PHOTO ITEMS
+   ============================================================ */
+.photo-item {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  animation: gridItemIn 0.5s var(--transition-smooth) both;
+  -webkit-animation: gridItemIn 0.5s var(--transition-smooth) both;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.photo-item .grid-image { aspect-ratio: auto; height: auto; }
+.photo-item .grid-image-inner-wrapper { position: relative; inset: unset; height: auto; }
+.photo-item .grid-image img { width: 100%; height: auto; display: block; }
+.photo-item.photo-aspect-4-5 .grid-image { aspect-ratio: 4 / 5; height: auto; }
+.photo-item.photo-aspect-4-5 .grid-image-inner-wrapper { position: absolute; inset: 0; }
+.photo-item.photo-aspect-4-5 .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.photo-item.photo-aspect-4-5.photo-crop-less-headroom { display: flex; justify-content: center; align-items: stretch; }
+.photo-item.photo-aspect-4-5.photo-crop-less-headroom .grid-image { height: 100%; width: auto; aspect-ratio: 4 / 5; min-height: 0; }
+.photo-item.photo-crop-less-headroom .grid-image img { object-position: 50% 55%; }
+/* 16:9 still image (e.g. beograd export) */
+.photo-item.photo-aspect-16-9 .grid-image { aspect-ratio: 16 / 9; height: auto; }
+.photo-item.photo-aspect-16-9 .grid-image-inner-wrapper { position: absolute; inset: 0; }
+.photo-item.photo-aspect-16-9 .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+/* 3:2 still image */
+.photo-item.photo-aspect-3-2 .grid-image { aspect-ratio: 3 / 2; height: auto; }
+.photo-item.photo-aspect-3-2 .grid-image-inner-wrapper { position: absolute; inset: 0; }
+.photo-item.photo-aspect-3-2 .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+
+/* Photo fills grid cell height – flush with other items in row */
+.photo-item.photo-fill-cell .grid-image { aspect-ratio: auto; height: 100%; min-height: 0; }
+.photo-item.photo-fill-cell .grid-image-inner-wrapper { position: absolute; inset: 0; }
+.photo-item.photo-fill-cell .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+
+/* 3:2 aspect for Colourtrax – fills cell, no white gap next to photos */
+.grid-item.grid-item-aspect-3-2 .grid-image { aspect-ratio: 3 / 2; height: auto; }
+.grid-item.grid-item-aspect-3-2 .grid-image-inner-wrapper { position: absolute; inset: 0; }
+.grid-item.grid-item-aspect-3-2 .grid-image img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+
+/* ============================================================
+   PHOTO LIGHTBOX
+   ============================================================ */
+#photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  padding-top: max(40px, env(safe-area-inset-top));
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+  padding-left: max(40px, env(safe-area-inset-left));
+  padding-right: max(40px, env(safe-area-inset-right));
+  cursor: inherit;
+  visibility: hidden;
+  pointer-events: none;
+}
+#photo-lightbox.open {
+  visibility: visible;
+  pointer-events: auto;
+}
+#photo-lightbox .photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.78);
+  opacity: 0;
+  transition: opacity 0.3s var(--transition-smooth);
+}
+#photo-lightbox.open .photo-lightbox-backdrop {
+  opacity: 1;
+}
+#photo-lightbox.open img[src] {
+  animation: photoLightboxExpand 0.4s var(--transition-smooth) forwards;
+}
+@keyframes photoLightboxExpand {
+  from { transform: scale(0.94); -webkit-transform: scale(0.94); }
+  to { transform: scale(1); -webkit-transform: scale(1); }
+}
+#photo-lightbox img {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s var(--transition-smooth);
+}
+#photo-lightbox img.photo-lightbox-img-visible {
+  opacity: 1;
+}
+#photo-lightbox .photo-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  cursor: inherit;
+  padding: 0;
+  z-index: 2;
+}
+#photo-lightbox .photo-lightbox-close:hover { color: #ccc; }
+/* Photo lightbox: clean arrows < > only, no circle */
+#photo-lightbox .photo-lightbox-prev,
+#photo-lightbox .photo-lightbox-next {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 16px;
+  right: auto;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+#photo-lightbox .photo-lightbox-next { left: auto; right: 16px; }
+#photo-lightbox .photo-lightbox-prev .arrow-icon,
+#photo-lightbox .photo-lightbox-next .arrow-icon { display: none; }
+#photo-lightbox .photo-lightbox-prev::before { content: '<'; }
+#photo-lightbox .photo-lightbox-next::before { content: '>'; }
+#photo-lightbox .photo-lightbox-prev:hover,
+#photo-lightbox .photo-lightbox-next:hover { color: rgba(255, 255, 255, 0.85); }
+
+/* ============================================================
+   RESPONSIVE (MOBILE BREAKPOINTS)
+   ============================================================ */
+@media (max-width: 767px), (hover: none) {
+  #photo-lightbox .photo-lightbox-prev,
+  #photo-lightbox .photo-lightbox-next {
+    left: 12px;
+    right: auto;
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  #photo-lightbox .photo-lightbox-next { left: auto; right: 12px; }
+}
+
+@media (max-width: 767px) {
+  .grid-wrapper { grid-template-columns: 1fr; }
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper { grid-template-columns: 1fr; max-width: 100%; row-gap: 4px; }
+  body.view-film .grid-wrapper { grid-template-columns: 1fr; max-width: 100%; row-gap: 0.5rem; column-gap: 0; }
+  body.view-photo .grid-wrapper { max-width: 100%; }
+  #header { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 1rem var(--page-padding); }
+  .header-title { grid-column: auto; }
+  .header-nav-wrap { grid-column: auto; position: relative; z-index: 1000; }
+  .header-menu-btn {
+    display: flex;
+    position: relative;
+    z-index: 1001;
+  }
+  /* Mobile menu: full-screen overlay when open (davidmilankelly.com style) */
+  .header-nav {
+    position: fixed;
+    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    min-width: auto;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    max-height: none;
+    overflow: auto;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s var(--transition-smooth), visibility 0.3s var(--transition-smooth);
+  }
+  #header.menu-open .header-nav {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .header-nav a {
+    padding: 18px 28px;
+    display: block;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    width: 100%;
+    text-align: center;
+    border: none;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s var(--transition-smooth), opacity 0.3s var(--transition-smooth);
+  }
+  #header.menu-open .header-nav a {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  #header.menu-open .header-nav a:nth-child(1) { transition-delay: 0.05s; }
+  #header.menu-open .header-nav a:nth-child(2) { transition-delay: 0.1s; }
+  #header.menu-open .header-nav a:nth-child(3) { transition-delay: 0.15s; }
+  #header.menu-open .header-nav a:nth-child(4) { transition-delay: 0.2s; }
+  /* Hamburger to X when menu open */
+  #header.menu-open .header-menu-btn span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  #header.menu-open .header-menu-btn span:nth-child(2) {
+    opacity: 0;
+  }
+  #header.menu-open .header-menu-btn span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-wrapper { grid-template-columns: 1fr; }
+  body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   MOBILE FALLBACK
+   ============================================================ */
+/* Mobile fallback: simple stack (no grid) so Safari always shows content */
+.mobile-featured-fallback { display: none; }
+.mobile-featured-fallback a,
+.mobile-featured-fallback .photo-item {
+  display: block !important;
+  text-decoration: none;
+  color: inherit;
+  margin: 0 0 10px 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: inherit;
+  opacity: 1 !important;
+  animation: none !important;
+}
+.mobile-featured-fallback a:last-child,
+.mobile-featured-fallback .photo-item:last-child { margin-bottom: 0; }
+.mobile-featured-fallback a + .photo-item,
+.mobile-featured-fallback .photo-item + a { margin-top: 0; }
+.mobile-featured-fallback img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 42vw;
+  object-fit: cover;
+  vertical-align: top;
+}
+/* Mobile fallback: same structure as main grid so canvas/overlay hide play button */
+.mobile-featured-fallback .grid-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #111;
+}
+.mobile-featured-fallback .grid-image-inner-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.mobile-featured-fallback .grid-image video,
+.mobile-featured-fallback .grid-image .grid-loop-poster-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+}
+.mobile-featured-fallback .grid-image .grid-loop-video { pointer-events: none; }
+.mobile-featured-fallback .film-item-caption {
+  display: none !important;
+}
+@media (max-width: 767px) {
+  .mobile-featured-fallback { display: none; }
+  /* Work view on mobile: same as desktop – main grid, 1 column, same video loops (no fallback) */
+}
+
+/* ============================================================
+   MOBILE ANIMATIONS
+   ============================================================ */
+/* Mobile: fast scale-in, GPU-accelerated */
+@media (max-width: 767px) {
+  body { -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+  .grid-item,
+  .photo-item {
+    animation: gridItemInMobile 0.28s var(--transition-smooth) both;
+    -webkit-animation: gridItemInMobile 0.28s var(--transition-smooth) both;
+    will-change: transform, opacity;
+  }
+  .grid-item.played,
+  .photo-item.played { will-change: auto; opacity: 1; transform: none; -webkit-transform: none; }
+  /* Featured (Work) on mobile: scale-in animation (Safari mobile via JS + -webkit prefix) */
+  /* Hide info block so it never pushes grid down (show only on Info tab) */
+  #info-placeholder { display: none !important; }
+  body.view-info #info-placeholder { display: block !important; }
+  /* Keep label minimal so grid starts near top */
+  .page-section-label { margin: 0 0 4px 0 !important; padding: 0 !important; }
+  /* NUCLEAR: force main content visible, grid at top – no body class dependency (Safari fix) */
+  main#page {
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    min-height: 0 !important;
+    padding-top: 4px !important;
+    gap: 0 !important;
+    opacity: 1 !important;
+  }
+  .grid-wrapper {
+    display: grid !important;
+    visibility: visible !important;
+    min-height: 280px !important;
+    opacity: 1 !important;
+    grid-template-columns: 1fr !important;
+    margin-top: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  .grid-wrapper .featured {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-height: 0 !important;
+  }
+  .grid-wrapper .featured .grid-image {
+    min-height: 45vw !important;
+  }
+  body.view-work #page {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  /* Work view on mobile: show main grid (1 col), same loops and order as desktop */
+}
+@keyframes gridItemInMobile {
+  from { opacity: 0; transform: scale(0.96); -webkit-transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); -webkit-transform: scale(1); }
+}
+
+/* Smooth scaling on mobile: GPU layer + touch-friendly */
+@media (hover: none) and (pointer: coarse) {
+  #playback-overlay,
+  #photo-lightbox {
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+  }
+  #playback-overlay .playback-inner,
+  #photo-lightbox img[src] {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  #playback-overlay:not(.playback-overlay--work) .playback-inner { transform: translateZ(0) scale(0.94); }
+  #playback-overlay:not(.playback-overlay--work).open .playback-inner { transform: translateZ(0) scale(1); }
+  .grid-item .grid-image,
+  .photo-item .grid-image {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+/* ============================================================
+   PLAYBACK OVERLAY
+   ============================================================ */
+/* Playback overlay – on Work page only: match photo lightbox (cell 5) – dark but see-through. */
+#playback-overlay.playback-overlay--work {
+  background: rgba(0, 0, 0, 0.78);
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+#playback-overlay.playback-overlay--work .playback-inner {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(94vw, 72rem);
+  max-width: 72rem;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+#playback-overlay.playback-overlay--work .playback-inner.playback-inner--expanded {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+#playback-overlay.playback-overlay--work .playback-caption {
+  display: block;
+  margin-top: 0.85rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+#playback-overlay.playback-overlay--work .playback-caption .playback-caption-project {
+  display: block;
+}
+#playback-overlay.playback-overlay--work .playback-close {
+  top: -42px;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 22px;
+  line-height: 32px;
+  color: rgba(255, 255, 255, 0.9);
+}
+#playback-overlay.playback-overlay--work .playback-close:hover { color: #fff; }
+
+/* Motion page: BEOGRAD – title + credit overlaid on video (red title, "a film by…") */
+#playback-overlay.playback-overlay--beograd .playback-caption { display: none; }
+/* Remove all Beograd overlay text */
+#playback-overlay .playback-video-overlay-copy {
+  display: none !important;
+}
+
+#playback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 72px 40px;
+  padding-top: max(60px, env(safe-area-inset-top));
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+  padding-left: max(72px, env(safe-area-inset-left));
+  padding-right: max(72px, env(safe-area-inset-right));
+  visibility: hidden;
+  pointer-events: none;
+}
+#playback-overlay.open {
+  visibility: visible;
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.78);
+}
+#playback-overlay .playback-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.78);
+  opacity: 0;
+  transition: opacity 0.3s var(--transition-smooth);
+}
+#playback-overlay.open .playback-backdrop {
+  opacity: 1;
+}
+#playback-overlay .playback-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 56rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#playback-overlay:not(.playback-overlay--work) .playback-inner {
+  transform: scale(0.88);
+  opacity: 0;
+  transition: transform 0.4s var(--transition-smooth), opacity 0.35s var(--transition-smooth);
+}
+#playback-overlay:not(.playback-overlay--work).open .playback-inner {
+  transform: scale(1);
+  opacity: 1;
+}
+/* Video lightbox: default (Film tab) – dark backdrop, centered player, light UI */
+#playback-overlay:not(.playback-overlay--work) .playback-close {
+  top: 20px;
+  right: 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+#playback-overlay:not(.playback-overlay--work) .playback-close:hover { color: #fff; }
+#playback-overlay:not(.playback-overlay--work) .playback-caption { color: rgba(255, 255, 255, 0.9); }
+#playback-overlay .playback-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1a1a1a;
+}
+#playback-overlay #playback-embed {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+#playback-overlay #playback-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+#playback-overlay .playback-beograd-thumb {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#playback-overlay .playback-beograd-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+#playback-overlay .playback-beograd-play {
+  position: relative;
+  z-index: 1;
+  width: 72px;
+  height: 72px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+#playback-overlay .playback-beograd-play::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: 3px;
+  margin-top: -14px;
+  border-width: 14px 0 14px 24px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(255,255,255,0.95);
+}
+#playback-overlay .playback-beograd-play:hover::after {
+  border-left-color: #fff;
+}
+#playback-overlay .playback-caption {
+  width: 100%;
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  line-height: 1.5;
+}
+#playback-overlay .playback-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: #000;
+  font-size: 28px;
+  line-height: 1;
+  cursor: inherit;
+  padding: 0;
+}
+#playback-overlay .playback-close:hover {
+  color: #000;
+}
+/* Photo lightbox: hide prev/next unless on Photo tab (gallery) */
+#photo-lightbox .photo-lightbox-prev,
+#photo-lightbox .photo-lightbox-next { display: none !important; }
+body.view-photo #photo-lightbox.open .photo-lightbox-prev,
+body.view-photo #photo-lightbox.open .photo-lightbox-next { display: flex !important; }
+
+/* ============================================================
+   BLUR PLACEHOLDER LOADING
+   ============================================================ */
+/* Blur poster: sits above img and video, fades out when content is ready */
+.grid-image .grid-blur-poster {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: 50% 50%;
+  z-index: 2;
+  filter: blur(20px);
+  transform: scale(1.12);
+  transition: opacity 0.5s ease;
+}
+.grid-image-inner-wrapper.full-loaded .grid-blur-poster {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Full video — fades in under poster, poster fades out simultaneously */
+.grid-image .grid-loop-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+.grid-image-inner-wrapper.full-loaded .grid-loop-video {
+  opacity: 1;
+}
