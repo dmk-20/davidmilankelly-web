@@ -101,7 +101,7 @@ body {
   text-decoration: none;
   font-size: 2.25rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.005em;
 }
 
 .header-nav a {
@@ -192,6 +192,20 @@ body.view-film .photo-item { display: none !important; }
   z-index: 3;
 }
 body.view-film .grid-item .film-item-caption { display: block; }
+body.view-film .grid-item .film-item-caption {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  transform: none;
+  text-shadow: none;
+  color: #000;
+  text-align: center;
+  padding: 0.55rem 0 0.15rem;
+  margin: 0;
+  z-index: auto;
+  background: transparent;
+}
 body.view-film .grid-item.hide-on-film-view { display: none !important; }
 /* Film page: 16:9 video with caption overlaid (lower-third) */
 body.view-film .grid-item .grid-image { aspect-ratio: 16 / 9; height: auto; }
@@ -203,9 +217,8 @@ body.view-film .grid-item .grid-image video {
   object-fit: cover;
   object-position: 50% 50%;
 }
-/* BEOGRAD: Featured view = intro clip only; Film tab = same intro clip */
+/* BEOGRAD: Featured view = intro loop; Film tab = static poster frame */
 .film-beograd .beograd-film-cover { display: none; }
-body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd .beograd-film-cover { display: none !important; }
 body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd #beograd-video { display: block !important; position: relative; z-index: 1; }
 body:not(.view-film):not(.view-photo):not(.view-info) .film-beograd .grid-loop-video:not(#beograd-video) { display: none !important; }
 /* Below-fold grid items: skip layout/paint until near viewport (faster mobile load) */
@@ -225,8 +238,6 @@ body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured .g
   z-index: 1;
 }
 /* Safari (Work view): force Beograd cell to show video, not fallback/poster image */
-body.safari.view-work .film-beograd .beograd-film-cover,
-html.safari body.view-work .film-beograd .beograd-film-cover { display: none !important; }
 body.safari.view-work .film-beograd .video-poster-cover,
 html.safari body.view-work .film-beograd .video-poster-cover { display: none !important; opacity: 0 !important; pointer-events: none !important; }
 body.safari.view-work .film-beograd #beograd-video,
@@ -238,8 +249,13 @@ html.safari body.view-work .film-beograd #beograd-video { display: block !import
 .film-hero .hero-safari-thumb {
   display: none !important;
 }
-body.view-film .film-beograd .beograd-film-cover { display: none !important; }
-body.view-film .film-beograd #beograd-video {
+body.view-film .film-beograd #beograd-video { display: none !important; }
+body.view-film .film-beograd .grid-loop-video,
+body.view-film .film-beograd .mobile-fallback-video {
+  display: none !important;
+  opacity: 0 !important;
+}
+body.view-film .film-beograd .beograd-film-cover {
   display: block !important;
   position: absolute;
   inset: 0;
@@ -247,8 +263,15 @@ body.view-film .film-beograd #beograd-video {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  z-index: 1;
+  z-index: 3;
 }
+body.view-film .film-beograd .grid-blur-poster,
+body.view-film .film-beograd .grid-image-inner-wrapper.full-loaded .grid-blur-poster {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+}
+body.view-film .film-beograd .grid-image-inner-wrapper.full-loaded .grid-loop-video { opacity: 0 !important; }
 body.view-film .film-beograd .beograd-film-trailer { display: none !important; }
 body:not(.view-film) .film-beograd .beograd-film-trailer { display: none !important; }
 body.view-film .film-beograd .grid-loop-video-canvas,
@@ -264,22 +287,23 @@ body.view-film .grid-wrapper .grid-item[data-video-type]:not(.film-beograd) .gri
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-/* Motion page: column order – Deja Vu second */
+/* Motion page: column order */
 body.view-film .film-beograd { order: 1; }
 body.view-film .film-deja-vu { order: 2; }
-body.view-film .film-starling { order: 3; }
-body.view-film .film-colourtrax { order: 4; }
-body.view-film .film-hero { order: 5; }
+body.view-film .film-chalice { order: 3; }
+body.view-film .film-starling { order: 4; }
+body.view-film .film-colourtrax { order: 5; }
 body.view-film .film-freefall { order: 6; }
-body.view-film .film-winter { order: 7; }
-body.view-film .film-odd-day { order: 8; }
+body.view-film .film-hero { order: 7; }
+body.view-film .film-winter { order: 8; }
+body.view-film .film-odd-day { order: 9; }
 .film-winter .winter-film-cover { display: none; }
 body.view-film .film-winter .winter-film-cover { display: block !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
 
 /* ============================================================
    VIEW: WORK (FEATURED)
    ============================================================ */
-/* Featured (Work) view: 6 items – Beograd, Deja Vu, Starling, Hero (video loops), Photo (tile 5), Colourtrax (Safari: MP4 + WebM for videos) */
+/* Featured (Work) view: Beograd, Deja Vu, My Chalice, Starling, Freefall, Colourtrax */
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .grid-item:not(.featured),
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper > .photo-item:not(.featured) {
   display: none !important;
@@ -545,6 +569,7 @@ body.view-info .info-placeholder {
 .photo-item {
   cursor: pointer;
 }
+
 
 /* ============================================================
    MOBILE VIDEO BEHAVIOR
@@ -1210,7 +1235,7 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 }
 
 /* Motion page: BEOGRAD – title + credit overlaid on video (red title, "a film by…") */
-#playback-overlay.playback-overlay--beograd .playback-caption { display: none; }
+#playback-overlay.playback-overlay--beograd .playback-caption { display: block; }
 /* Remove all Beograd overlay text */
 #playback-overlay .playback-video-overlay-copy {
   display: none !important;

@@ -5,8 +5,8 @@ export default function VideoGridItem({ className, href, videoType, videoId, cap
         <div className="grid-image-inner-wrapper">
           {children}
         </div>
-        {caption && <span className="film-item-caption">{caption}</span>}
       </div>
+      {caption && <span className="film-item-caption">{caption}</span>}
     </a>
   )
 }

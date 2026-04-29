@@ -5,7 +5,7 @@ export default function InfoPlaceholder() {
       <p>Director. Writer. Photographer.</p>
       <p>His recent film BEOGRAD was officially selected for competition at the Oscar Qualifying Palm Springs International Shortfest.</p>
       <h2>Selected clients:</h2>
-      <p>Atlantic Records, Sony Music Entertainment, NME Magazine, Paper Magazine, Dangerbird Records, Winspear, Jenkem Magazine, Times Square NYC, Spotify</p>
+      <p>Atlantic Records, Night Media, Sony Music, NME Magazine, Paper Magazine, Dangerbird Records, Winspear, Jenkem Magazine, Times Square NYC, Spotify, &amp; More.</p>
       <p className="info-email"><a href="mailto:davidmilankelly@gmail.com">davidmilankelly@gmail.com</a></p>
       <p className="info-instagram">
         <a href="https://instagram.com/davidflipsout" target="_blank" rel="noopener noreferrer" aria-label="Instagram @davidflipsout">
