@@ -224,6 +224,12 @@ export default function App() {
         e.preventDefault()
         window.openVideoPlayback(item)
       })
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          window.openVideoPlayback(item)
+        }
+      })
     })
 
     let currentPhotoIndex = 0
@@ -496,7 +502,7 @@ export default function App() {
               <source src="/videos/dejavu-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
-          <VideoGridItem className="film-chalice featured featured-3" href="javascript:void(0)" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
+          <VideoGridItem className="film-chalice featured featured-3" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
             <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata" poster="https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg">
               <source src="/videos/chalice-loop.webm" type="video/webm" />
               <source src="/videos/chalice-loop.mp4" type="video/mp4" />
@@ -508,7 +514,7 @@ export default function App() {
               <source src="/videos/starling-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
-          <VideoGridItem className="film-freefall featured featured-5" href="javascript:void(0)" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
+          <VideoGridItem className="film-freefall featured featured-5" href="#" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
             <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata" poster={videoPosters.freefall}>
               <source src="/videos/freefall-loop.webm" type="video/webm" />
             </video>
@@ -527,7 +533,7 @@ export default function App() {
         <div className="grid-wrapper">
           <VideoGridItem className="film-beograd featured featured-1" href="#" videoType="youtube" videoId="pR-9xte4bgg" caption="BEOGRAD – OSCAR QUALIFYING SHORT FILM">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.beograd})` }} />
-            <img className="beograd-film-cover" src="/images/beograd-16x9-cover.jpg" alt="" loading="lazy" decoding="async" />
+            <img className="beograd-film-cover" src="/images/beograd-16x9-cover.jpg" alt="" loading="eager" decoding="sync" fetchPriority="high" />
             <video id="beograd-video" className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/beograd-loop.webm" type="video/webm" />
               <source src="/videos/beograd-loop.mp4" type="video/mp4" />
@@ -542,7 +548,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-chalice featured featured-3" href="javascript:void(0)" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
+          <VideoGridItem className="film-chalice featured featured-3" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
             <div className="grid-blur-poster" style={{ backgroundImage: 'url(https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg)' }} />
             <video className="grid-loop-video" loop muted playsInline preload="none" poster="https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg">
               <source src="/videos/chalice-loop.webm" type="video/webm" />
@@ -566,21 +572,21 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-freefall featured featured-5" href="javascript:void(0)" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
+          <VideoGridItem className="film-freefall featured featured-5" href="#" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.freefall})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/freefall-loop.webm" type="video/webm" />
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-winter" href="javascript:void(0)" videoType="youtube" videoId="OjzvAPvmASw" caption="Winter">
+          <VideoGridItem className="film-winter" href="#" videoType="youtube" videoId="OjzvAPvmASw" caption="Winter">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.winter})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/winter-loop.webm" type="video/webm" />
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-odd-day" href="javascript:void(0)" videoType="youtube" videoId="E6EhtnpuW24" caption="ODD DAY">
+          <VideoGridItem className="film-odd-day" href="#" videoType="youtube" videoId="E6EhtnpuW24" caption="ODD DAY">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.odd_day})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/odd-day-loop.webm" type="video/webm" />

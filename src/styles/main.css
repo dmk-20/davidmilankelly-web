@@ -267,9 +267,8 @@ body.view-film .film-beograd .beograd-film-cover {
 }
 body.view-film .film-beograd .grid-blur-poster,
 body.view-film .film-beograd .grid-image-inner-wrapper.full-loaded .grid-blur-poster {
-  opacity: 1 !important;
-  filter: none !important;
-  transform: none !important;
+  display: none !important;
+  opacity: 0 !important;
 }
 body.view-film .film-beograd .grid-image-inner-wrapper.full-loaded .grid-loop-video { opacity: 0 !important; }
 body.view-film .film-beograd .beograd-film-trailer { display: none !important; }
