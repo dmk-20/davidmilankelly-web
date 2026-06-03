@@ -96,12 +96,19 @@ body {
   transition: transform 0.3s var(--transition-smooth), opacity 0.2s var(--transition-smooth);
 }
 
-.header-title a {
+#header .header-title a.header-name {
   color: #000;
   text-decoration: none;
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: 0.005em;
+}
+
+#header .header-title .header-name-text {
+  display: inline-block;
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 2.25rem !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-synthesis: none;
+  letter-spacing: -0.04em !important;
 }
 
 .header-nav a {
@@ -163,19 +170,36 @@ body {
 /* ============================================================
    VIEW: FILM
    ============================================================ */
-/* View: Film – motion only, single column with side margins */
+/* View: Film – single column letterbox (same side margins), featured-style tiles */
 body.view-film .grid-wrapper {
   grid-template-columns: 1fr;
   max-width: 54%;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  row-gap: 0.6rem;
+  row-gap: var(--gap);
   column-gap: 0;
 }
 body.view-film .photo-item { display: none !important; }
 
-/* Film item lower-third caption (visible only on Film view) */
+body.view-film #page {
+  padding-left: var(--page-padding);
+  padding-right: var(--page-padding);
+  padding-bottom: 5rem;
+}
+@media (min-width: 768px) {
+  body.view-film #page {
+    padding-top: 5rem;
+  }
+}
+@media (max-width: 767px) {
+  body.view-film #page {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* Film tab: no titles below tiles (matches Featured) — captions kept in DOM for lightbox */
 .film-item-caption {
   display: none;
   position: absolute;
@@ -191,20 +215,8 @@ body.view-film .photo-item { display: none !important; }
   pointer-events: none;
   z-index: 3;
 }
-body.view-film .grid-item .film-item-caption { display: block; }
 body.view-film .grid-item .film-item-caption {
-  position: static;
-  left: auto;
-  right: auto;
-  bottom: auto;
-  transform: none;
-  text-shadow: none;
-  color: #000;
-  text-align: center;
-  padding: 0.55rem 0 0.15rem;
-  margin: 0;
-  z-index: auto;
-  background: transparent;
+  display: none !important;
 }
 body.view-film .grid-item.hide-on-film-view { display: none !important; }
 /* Film page: 16:9 video with caption overlaid (lower-third) */
@@ -969,7 +981,7 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
 @media (max-width: 767px) {
   .grid-wrapper { grid-template-columns: 1fr; }
   body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper { grid-template-columns: 1fr; max-width: 100%; row-gap: 4px; }
-  body.view-film .grid-wrapper { grid-template-columns: 1fr; max-width: 100%; row-gap: 0.5rem; column-gap: 0; }
+  body.view-film .grid-wrapper { grid-template-columns: 1fr; max-width: 100%; row-gap: var(--gap); column-gap: 0; }
   body.view-photo .grid-wrapper { max-width: 100%; }
   #header { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 1rem var(--page-padding); }
   .header-title { grid-column: auto; }

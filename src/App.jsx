@@ -64,15 +64,21 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    let skipNextLoopRestart = true
+
     function restartLoopsForView(view) {
       if (view !== 'work' && view !== 'film') return
-      const loops = document.querySelectorAll('.grid-loop-video, .mobile-fallback-video')
+      if (skipNextLoopRestart) {
+        skipNextLoopRestart = false
+        return
+      }
+      const loops = document.querySelectorAll('.grid-wrapper .grid-loop-video')
       loops.forEach((video) => {
         try {
-          video.pause()
-          video.currentTime = 0
           video.muted = true
           video.setAttribute('muted', '')
+          video.pause()
+          video.currentTime = 0
           video.play().catch(() => {})
         } catch (e) {}
       })
@@ -293,18 +299,34 @@ export default function App() {
     })
 
     // ===== VIDEO INTERSECTION OBSERVER =====
+    const isFeaturedWorkLoop = (video) =>
+      document.body.classList.contains('view-work') &&
+      Boolean(video.closest('.grid-item.featured'))
+
+    const resumeLoop = (video) => {
+      if (!video?.isConnected) return
+      video.muted = true
+      video.setAttribute('muted', '')
+      if (video.readyState >= 2) {
+        video.play().catch(() => {})
+      }
+    }
+
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        const video = entry.target
         if (entry.isIntersecting) {
-          // Only play if already loaded — don't trigger network requests here
-          if (entry.target.readyState >= 2) entry.target.play().catch(() => {})
-        } else {
-          entry.target.pause()
+          resumeLoop(video)
+        } else if (!isFeaturedWorkLoop(video)) {
+          video.pause()
         }
       })
-    }, { threshold: 0.1, rootMargin: '50px' })
+    }, { threshold: 0, rootMargin: '250px' })
 
-    document.querySelectorAll('video').forEach(v => videoObserver.observe(v))
+    document.querySelectorAll('.grid-wrapper .grid-loop-video').forEach((video) => {
+      videoObserver.observe(video)
+      video.addEventListener('ended', () => resumeLoop(video))
+    })
 
     // ===== SCROLL HANDLER =====
     let ticking = false
@@ -391,13 +413,6 @@ export default function App() {
         video.removeAttribute('controls')
         video.controls = false
 
-        // Prefer MP4 for Safari (full-quality videos only — tiny are WebM-only)
-        const mp4Source = video.querySelector('source[type="video/mp4"]')
-        if (mp4Source && video.children.length > 1) {
-          video.src = mp4Source.src
-          // Don't call load() here — sequential loader handles it
-        }
-
         const wrapper = video.closest('.grid-image-inner-wrapper')
         if (wrapper && !wrapper.querySelector('.video-tap-overlay')) {
           const tapOverlay = document.createElement('div')
@@ -414,18 +429,6 @@ export default function App() {
         }
       })
 
-      const safariVideoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setTimeout(() => entry.target.play().catch(() => {}), 100)
-          } else {
-            entry.target.pause()
-          }
-        })
-      }, { threshold: 0.1, rootMargin: '50px' })
-
-      document.querySelectorAll('video').forEach(v => safariVideoObserver.observe(v))
-
       if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
         document.querySelectorAll('video source[type="video/webm"]').forEach(source => {
           source.parentElement.removeChild(source)
@@ -434,30 +437,53 @@ export default function App() {
     }
 
     // ===== VIDEO LOADING =====
-    // Load videos lazily as they enter the viewport to avoid saturating mobile bandwidth.
-    // Falls back to loadeddata if canplay is slow, and marks full-loaded on error/emptied
-    // so the blur poster never gets stuck.
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+
+    const applyPreferredSources = (video) => {
+      const webm = video.querySelector('source[type="video/webm"]')
+      const mp4 = video.querySelector('source[type="video/mp4"]')
+      if (isSafari || isIOS) {
+        if (mp4?.src) {
+          video.src = mp4.src
+          if (webm) webm.remove()
+        }
+        return
+      }
+
+      // Desktop Chrome/Firefox: WebM only (smaller, smoother loops — especially My Chalice)
+      if (webm?.src) {
+        video.src = webm.src
+        if (mp4) mp4.remove()
+        return
+      }
+
+      if (mp4?.src) video.src = mp4.src
+    }
+
     const loadVideo = (video) => {
       if (video.dataset.loadStarted) return
       video.dataset.loadStarted = '1'
 
-      // If no usable sources remain (e.g. iOS stripped WebM-only videos), skip
-      const hasSrc = video.src || video.querySelector('source')
-      if (!hasSrc) {
-        video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
+      const wrapper = video.closest('.grid-image-inner-wrapper')
+      applyPreferredSources(video)
+
+      if (!video.src && !video.querySelector('source')) {
+        wrapper?.classList.add('full-loaded')
         return
       }
 
-      const markLoaded = () => {
-        video.play().catch(() => {})
-        video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
+      let playbackStarted = false
+      const startPlayback = () => {
+        if (playbackStarted) return
+        playbackStarted = true
+        resumeLoop(video)
+        wrapper?.classList.add('full-loaded')
       }
 
-      video.addEventListener('canplay', markLoaded, { once: true })
-      video.addEventListener('loadeddata', markLoaded, { once: true })
-      // Fallback: if video errors or has no sources, still remove the blur
+      video.addEventListener('canplaythrough', startPlayback, { once: true })
+      video.addEventListener('canplay', startPlayback, { once: true })
       video.addEventListener('error', () => {
-        video.closest('.grid-image-inner-wrapper')?.classList.add('full-loaded')
+        wrapper?.classList.add('full-loaded')
       }, { once: true })
 
       video.preload = 'auto'
@@ -488,52 +514,13 @@ export default function App() {
       <main id="page" role="main">
         <p className="page-section-label" id="page-section-label" aria-hidden="true">FEATURED</p>
 
-        {/* Mobile fallback (always display:none — paths updated, no tiny needed) */}
-        <div className="mobile-featured-fallback" aria-hidden="false">
-          <VideoGridItem className="film-beograd featured featured-1" href="#" videoType="youtube" videoId="pR-9xte4bgg" caption="BEOGRAD – OSCAR QUALIFYING SHORT FILM">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="auto" fetchPriority="high">
-              <source src="/videos/beograd-loop.webm" type="video/webm" />
-              <source src="/videos/beograd-loop.mp4" type="video/mp4" />
-            </video>
-          </VideoGridItem>
-          <VideoGridItem className="grid-item-aspect-3-2 film-deja-vu featured featured-2" href="#" videoType="vimeo" videoId="799266927" caption="DEJA VU LIQUOR – SHORT FILM">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
-              <source src="/videos/dejavu-loop.webm" type="video/webm" />
-              <source src="/videos/dejavu-loop.mp4" type="video/mp4" />
-            </video>
-          </VideoGridItem>
-          <VideoGridItem className="film-chalice featured featured-3" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata" poster="https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg">
-              <source src="/videos/chalice-loop.webm" type="video/webm" />
-              <source src="/videos/chalice-loop.mp4" type="video/mp4" />
-            </video>
-          </VideoGridItem>
-          <VideoGridItem className="film-starling featured featured-4" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
-              <source src="/videos/starling-loop.webm" type="video/webm" />
-              <source src="/videos/starling-loop.mp4" type="video/mp4" />
-            </video>
-          </VideoGridItem>
-          <VideoGridItem className="film-freefall featured featured-5" href="#" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata" poster={videoPosters.freefall}>
-              <source src="/videos/freefall-loop.webm" type="video/webm" />
-            </video>
-          </VideoGridItem>
-          <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax featured featured-6" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
-            <video className="mobile-fallback-video grid-loop-video" loop muted playsInline preload="metadata">
-              <source src="/videos/colourtrax-loop.webm" type="video/webm" />
-              <source src="/videos/colourtrax-loop.mp4" type="video/mp4" />
-            </video>
-          </VideoGridItem>
-        </div>
-
         <InfoPlaceholder />
 
         {/* Main grid */}
         <div className="grid-wrapper">
           <VideoGridItem className="film-beograd featured featured-1" href="#" videoType="youtube" videoId="pR-9xte4bgg" caption="BEOGRAD – OSCAR QUALIFYING SHORT FILM">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.beograd})` }} />
-            <img className="beograd-film-cover" src="/images/beograd-16x9-cover.jpg" alt="" loading="eager" decoding="sync" fetchPriority="high" />
+            <img className="beograd-film-cover" src="/images/beograd-16x9-cover.jpg" alt="" loading="lazy" decoding="async" />
             <video id="beograd-video" className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/beograd-loop.webm" type="video/webm" />
               <source src="/videos/beograd-loop.mp4" type="video/mp4" />
@@ -550,7 +537,14 @@ export default function App() {
 
           <VideoGridItem className="film-chalice featured featured-3" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
             <div className="grid-blur-poster" style={{ backgroundImage: 'url(https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg)' }} />
-            <video className="grid-loop-video" loop muted playsInline preload="none" poster="https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg">
+            <video
+              className="grid-loop-video"
+              loop
+              muted
+              playsInline
+              preload="none"
+              poster="https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg"
+            >
               <source src="/videos/chalice-loop.webm" type="video/webm" />
               <source src="/videos/chalice-loop.mp4" type="video/mp4" />
             </video>
