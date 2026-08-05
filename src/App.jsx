@@ -98,7 +98,7 @@ export default function App() {
       if (!overlay || !embed) return false
 
       const src = type === 'youtube'
-        ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`
+        ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
         : type === 'vimeo'
           ? `https://player.vimeo.com/video/${id}?autoplay=1`
           : ''
@@ -560,7 +560,14 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-starling featured featured-5" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
+          <VideoGridItem className="film-crush featured featured-5" href="#" videoType="youtube" videoId="FuITBKOgLKo" caption="CRUSH">
+            <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.crush})` }} />
+            <video className="grid-loop-video" loop muted playsInline preload="none">
+              <source src="/videos/crush-loop.mp4" type="video/mp4" />
+            </video>
+          </VideoGridItem>
+
+          <VideoGridItem className="film-starling" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.starling})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/starling-loop.webm" type="video/webm" />
@@ -568,7 +575,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-hero" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
+          <VideoGridItem className="film-hero featured featured-6" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.hero})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/hero-loop.webm" type="video/webm" />
@@ -600,7 +607,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax featured featured-6" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
+          <VideoGridItem className="grid-item-aspect-3-2 film-colourtrax" href="#" videoType="vimeo" videoId="1131852040" caption="COLOURTRAX">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.colourtrax})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/colourtrax-loop.webm" type="video/webm" />
