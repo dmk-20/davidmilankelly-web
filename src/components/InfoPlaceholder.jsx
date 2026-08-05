@@ -1,11 +1,11 @@
 export default function InfoPlaceholder() {
   return (
     <div id="info-placeholder" className="info-placeholder" aria-hidden="true">
-      <p>Grew up between Los Angeles and Belgrade, Serbia.</p>
-      <p>Director. Writer. Photographer.</p>
-      <p>His recent film BEOGRAD was officially selected for competition at the Oscar Qualifying Palm Springs International Shortfest.</p>
-      <h2>Selected clients:</h2>
-      <p>Atlantic Records, Night Media, Sony Music, NME Magazine, Paper Magazine, Dangerbird Records, Winspear, Jenkem Magazine, Times Square NYC, Spotify, &amp; More.</p>
+      <p>grew up between los angeles and belgrade, serbia.</p>
+      <p>director. writer. photographer.</p>
+      <p>his recent film beograd was officially selected for competition at the oscar qualifying palm springs international shortfest.</p>
+      <h2>selected clients:</h2>
+      <p>atlantic records, night media, sony music, nme magazine, paper magazine, dangerbird records, winspear, jenkem magazine, times square nyc, spotify, &amp; more.</p>
       <p className="info-email"><a href="mailto:davidmilankelly@gmail.com">davidmilankelly@gmail.com</a></p>
       <p className="info-instagram">
         <a href="https://instagram.com/davidflipsout" target="_blank" rel="noopener noreferrer" aria-label="Instagram @davidflipsout">

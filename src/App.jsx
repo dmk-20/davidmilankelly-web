@@ -20,7 +20,7 @@ export default function App() {
     let currentVideoIndex = 0
 
     // ===== SIMPLE VIEW MANAGER =====
-    const viewLabels = { work: 'FEATURED', film: 'Film', photo: 'Photography' }
+    const viewLabels = { work: 'featured', film: 'film', photo: 'photography' }
     const labelEl = document.getElementById('page-section-label')
     const infoEl = document.getElementById('info-placeholder')
     const nav = document.querySelector('.header-nav')
@@ -515,7 +515,7 @@ export default function App() {
       <Header />
 
       <main id="page" role="main">
-        <p className="page-section-label" id="page-section-label" aria-hidden="true">FEATURED</p>
+        <p className="page-section-label" id="page-section-label" aria-hidden="true">featured</p>
 
         <InfoPlaceholder />
 
