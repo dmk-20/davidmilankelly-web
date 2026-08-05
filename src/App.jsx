@@ -446,6 +446,9 @@ export default function App() {
         if (mp4?.src) {
           video.src = mp4.src
           if (webm) webm.remove()
+        } else if (webm?.src) {
+          // Keep WebM if no MP4 exists rather than leaving an empty cell
+          video.src = webm.src
         }
         return
       }
@@ -577,6 +580,7 @@ export default function App() {
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.freefall})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/freefall-loop.webm" type="video/webm" />
+              <source src="/videos/freefall-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
 
@@ -584,6 +588,7 @@ export default function App() {
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.winter})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/winter-loop.webm" type="video/webm" />
+              <source src="/videos/winter-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
 
@@ -591,6 +596,7 @@ export default function App() {
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.odd_day})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/odd-day-loop.webm" type="video/webm" />
+              <source src="/videos/odd-day-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
 
