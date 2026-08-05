@@ -96,19 +96,23 @@ body {
   transition: transform 0.3s var(--transition-smooth), opacity 0.2s var(--transition-smooth);
 }
 
-#header .header-title a.header-name {
+#header .header-title a.header-name,
+.header-title a {
   color: #000;
   text-decoration: none;
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: -0.04em;
 }
 
-#header .header-title .header-name-text {
-  display: inline-block;
-  font-family: "Times New Roman", Times, serif !important;
-  font-size: 2.25rem !important;
-  font-weight: 400 !important;
-  font-style: normal !important;
-  font-synthesis: none;
-  letter-spacing: -0.04em !important;
+.header-subheader {
+  margin: 0.15rem 0 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: #000;
 }
 
 .header-nav a {
@@ -302,12 +306,13 @@ body.view-film .grid-wrapper .grid-item[data-video-type]:not(.film-beograd) .gri
 body.view-film .film-beograd { order: 1; }
 body.view-film .film-deja-vu { order: 2; }
 body.view-film .film-chalice { order: 3; }
-body.view-film .film-starling { order: 4; }
-body.view-film .film-colourtrax { order: 5; }
-body.view-film .film-freefall { order: 6; }
-body.view-film .film-hero { order: 7; }
-body.view-film .film-winter { order: 8; }
-body.view-film .film-odd-day { order: 9; }
+body.view-film .film-djdave { order: 4; }
+body.view-film .film-starling { order: 5; }
+body.view-film .film-colourtrax { order: 6; }
+body.view-film .film-freefall { order: 7; }
+body.view-film .film-hero { order: 8; }
+body.view-film .film-winter { order: 9; }
+body.view-film .film-odd-day { order: 10; }
 .film-winter .winter-film-cover { display: none; }
 body.view-film .film-winter .winter-film-cover { display: block !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
 

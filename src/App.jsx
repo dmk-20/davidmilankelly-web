@@ -550,7 +550,14 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-starling featured featured-4" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
+          <VideoGridItem className="film-djdave featured featured-4" href="#" videoType="vimeo" videoId="1215676076" caption="DJ DAVE – NEXT TO U">
+            <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.djdave})` }} />
+            <video className="grid-loop-video" loop muted playsInline preload="none">
+              <source src="/videos/djdave-loop.mp4" type="video/mp4" />
+            </video>
+          </VideoGridItem>
+
+          <VideoGridItem className="film-starling featured featured-5" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.starling})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/starling-loop.webm" type="video/webm" />
@@ -566,7 +573,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-freefall featured featured-5" href="#" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
+          <VideoGridItem className="film-freefall" href="#" videoType="youtube" videoId="YE8l-5BAG1I" caption="FREEFALL">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.freefall})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/freefall-loop.webm" type="video/webm" />
@@ -600,6 +607,7 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/billboard-frost-children.png" src="/images/billboard-frost-children.png" alt="Billboard frost children" poster={photoPosters['billboard_frost_children']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" poster={photoPosters['2']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/catfish-parkinglot.jpg" src="/images/catfish-parkinglot.jpg" alt="Catfish parking lot" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" poster={photoPosters['catherine']} />
