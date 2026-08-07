@@ -307,13 +307,14 @@ body.view-film .film-beograd { order: 1; }
 body.view-film .film-deja-vu { order: 2; }
 body.view-film .film-chalice { order: 3; }
 body.view-film .film-djdave { order: 4; }
-body.view-film .film-crush { order: 5; }
-body.view-film .film-starling { order: 6; }
-body.view-film .film-colourtrax { order: 7; }
-body.view-film .film-hero { order: 8; }
-body.view-film .film-freefall { order: 9; }
-body.view-film .film-winter { order: 10; }
-body.view-film .film-odd-day { order: 11; }
+body.view-film .film-tuamor { order: 5; }
+body.view-film .film-crush { order: 6; }
+body.view-film .film-starling { order: 7; }
+body.view-film .film-colourtrax { order: 8; }
+body.view-film .film-hero { order: 9; }
+body.view-film .film-freefall { order: 10; }
+body.view-film .film-winter { order: 11; }
+body.view-film .film-odd-day { order: 12; }
 .film-winter .winter-film-cover { display: none; }
 body.view-film .film-winter .winter-film-cover { display: block !important; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 2; }
 
@@ -331,6 +332,12 @@ body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-3 
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-4 { order: 4; }
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-5 { order: 5; }
 body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-6 { order: 6; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-7 { order: 7; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-8 { order: 8; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-9 { order: 9; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-10 { order: 10; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-11 { order: 11; }
+body:not(.view-film):not(.view-photo):not(.view-info) .grid-wrapper .featured-12 { order: 12; }
 /* Featured: 3x2 grid, generous margins to match reference spacing */
 body:not(.view-film):not(.view-photo):not(.view-info) #page {
   padding-left: var(--page-padding);
@@ -1328,6 +1335,22 @@ body.safari.view-work .grid-wrapper .featured .grid-image {
   width: 100%;
   height: 100%;
   border: none;
+}
+#playback-overlay .playback-coming-soon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+}
+#playback-overlay .playback-coming-soon span {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.9);
 }
 #playback-overlay .playback-beograd-thumb {
   position: absolute;

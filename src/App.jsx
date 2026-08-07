@@ -88,7 +88,8 @@ export default function App() {
     window.openVideoPlayback = function(link) {
       const type = link.getAttribute('data-video-type')
       const id = link.getAttribute('data-video-id')
-      if (!type || !id) return false
+      if (!type) return false
+      if (type !== 'coming-soon' && !id) return false
 
       const overlay = document.getElementById('playback-overlay')
       const embed = document.getElementById('playback-embed')
@@ -97,48 +98,54 @@ export default function App() {
 
       if (!overlay || !embed) return false
 
-      const src = type === 'youtube'
-        ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
-        : type === 'vimeo'
-          ? `https://player.vimeo.com/video/${id}?autoplay=1`
-          : ''
-
-      if (!src) return false
-
       const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
       const vIdx = visibleVideoItems.indexOf(link)
       if (vIdx !== -1) currentVideoIndex = vIdx
 
       const isBeograd = id === 'pR-9xte4bgg' || link.classList.contains('film-beograd')
+      const isDejaVu = id === '799266927' || link.classList.contains('film-deja-vu')
+      const isComingSoon = type === 'coming-soon' || link.classList.contains('film-tuamor')
+      const projectName = isComingSoon
+        ? 'TU AMOR'
+        : isBeograd
+          ? 'BEOGRAD – OSCAR QUALIFYING SHORT FILM'
+          : isDejaVu
+            ? 'DEJA VU LIQUOR – SHORT FILM'
+            : (link.getAttribute('title') ||
+              (link.querySelector('.film-item-caption') && link.querySelector('.film-item-caption').textContent) || '')
 
-      if (isBeograd && type === 'youtube') {
-        embed.innerHTML = `
-          <div class="playback-beograd-thumb">
-            <img src="/images/beograd-16x9-cover.jpg" alt="">
-            <button type="button" class="playback-beograd-play" aria-label="Play"></button>
-          </div>
-        `
+      if (isComingSoon) {
+        embed.innerHTML = `<div class="playback-coming-soon" aria-live="polite"><span>coming soon</span></div>`
+      } else {
+        const src = type === 'youtube'
+          ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
+          : type === 'vimeo'
+            ? `https://player.vimeo.com/video/${id}?autoplay=1`
+            : ''
 
-        const thumbWrap = embed.querySelector('.playback-beograd-thumb')
-        const playBtn = embed.querySelector('.playback-beograd-play')
+        if (!src) return false
 
-        function startBeogradVideo() {
+        if (isBeograd && type === 'youtube') {
+          embed.innerHTML = `
+            <div class="playback-beograd-thumb">
+              <img src="/images/beograd-16x9-cover.jpg" alt="">
+              <button type="button" class="playback-beograd-play" aria-label="Play"></button>
+            </div>
+          `
+
+          const thumbWrap = embed.querySelector('.playback-beograd-thumb')
+          const playBtn = embed.querySelector('.playback-beograd-play')
+
+          function startBeogradVideo() {
+            embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+          }
+
+          if (playBtn) playBtn.addEventListener('click', (e) => { e.stopPropagation(); startBeogradVideo() })
+          if (thumbWrap) thumbWrap.addEventListener('click', (e) => { if (e.target === thumbWrap || e.target.tagName === 'IMG') startBeogradVideo() })
+        } else {
           embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
         }
-
-        if (playBtn) playBtn.addEventListener('click', (e) => { e.stopPropagation(); startBeogradVideo() })
-        if (thumbWrap) thumbWrap.addEventListener('click', (e) => { if (e.target === thumbWrap || e.target.tagName === 'IMG') startBeogradVideo() })
-      } else {
-        embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
       }
-
-      const isDejaVu = id === '799266927' || link.classList.contains('film-deja-vu')
-      const projectName = isBeograd
-        ? 'BEOGRAD – OSCAR QUALIFYING SHORT FILM'
-        : isDejaVu
-          ? 'DEJA VU LIQUOR – SHORT FILM'
-          : (link.getAttribute('title') ||
-            (link.querySelector('.film-item-caption') && link.querySelector('.film-item-caption').textContent) || '')
 
       if (captionEl) {
         captionEl.innerHTML = projectName ? `<span class="playback-caption-project">${projectName}</span>` : ''
@@ -148,6 +155,7 @@ export default function App() {
 
       overlay.classList.add('open', 'playback-overlay--work')
       if (isBeograd) overlay.classList.add('playback-overlay--beograd')
+      if (isComingSoon) overlay.classList.add('playback-overlay--coming-soon')
       overlay.setAttribute('aria-hidden', 'false')
 
       return false
@@ -180,7 +188,7 @@ export default function App() {
       const caption = document.getElementById('playback-caption')
       const overlayCopy = document.getElementById('playback-video-overlay-copy')
 
-      overlay.classList.remove('open', 'playback-overlay--work', 'playback-overlay--beograd')
+      overlay.classList.remove('open', 'playback-overlay--work', 'playback-overlay--beograd', 'playback-overlay--coming-soon')
       overlay.setAttribute('aria-hidden', 'true')
       if (embed) embed.innerHTML = ''
       if (caption) caption.innerHTML = ''
@@ -553,21 +561,28 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-djdave featured featured-4" href="#" videoType="vimeo" videoId="1215676076" caption="DJ DAVE – NEXT TO U">
+          <VideoGridItem className="film-tuamor featured featured-4" href="#" videoType="coming-soon" videoId="tuamor" caption="TU AMOR">
+            <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.tuamor})` }} />
+            <video className="grid-loop-video" loop muted playsInline preload="none">
+              <source src="/videos/tuamor-loop.mp4" type="video/mp4" />
+            </video>
+          </VideoGridItem>
+
+          <VideoGridItem className="film-djdave featured featured-5" href="#" videoType="vimeo" videoId="1215676076" caption="DJ DAVE – NEXT TO U">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.djdave})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/djdave-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-crush featured featured-5" href="#" videoType="youtube" videoId="FuITBKOgLKo" caption="CRUSH">
+          <VideoGridItem className="film-crush" href="#" videoType="youtube" videoId="FuITBKOgLKo" caption="CRUSH">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.crush})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/crush-loop.mp4" type="video/mp4" />
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-starling" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
+          <VideoGridItem className="film-starling featured featured-6" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.starling})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/starling-loop.webm" type="video/webm" />
@@ -575,7 +590,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-hero featured featured-6" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
+          <VideoGridItem className="film-hero" href="#" videoType="youtube" videoId="i10I_Eh5Zgo" caption="HERO">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.hero})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/hero-loop.webm" type="video/webm" />
