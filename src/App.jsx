@@ -104,9 +104,11 @@ export default function App() {
 
       const isBeograd = id === 'pR-9xte4bgg' || link.classList.contains('film-beograd')
       const isDejaVu = id === '799266927' || link.classList.contains('film-deja-vu')
-      const isComingSoon = type === 'coming-soon' || link.classList.contains('film-tuamor')
+      const isComingSoon = type === 'coming-soon'
       const projectName = isComingSoon
-        ? 'TU AMOR'
+        ? (link.getAttribute('title') ||
+          (link.querySelector('.film-item-caption') && link.querySelector('.film-item-caption').textContent) ||
+          'COMING SOON')
         : isBeograd
           ? 'BEOGRAD – OSCAR QUALIFYING SHORT FILM'
           : isDejaVu
@@ -561,7 +563,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-tuamor featured featured-4" href="#" videoType="coming-soon" videoId="tuamor" caption="TU AMOR">
+          <VideoGridItem className="film-tuamor featured featured-4" href="#" videoType="youtube" videoId="lgkw_o651Co" caption="TU AMOR">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.tuamor})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/tuamor-loop.mp4" type="video/mp4" />
