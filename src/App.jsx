@@ -677,11 +677,11 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone5.jpg" src="/images/feromone5.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone6.jpg" src="/images/feromone6.jpg" alt="Feromone" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/winterportrait.jpg" src="/images/winterportrait.jpg" alt="Winter portrait" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" poster={photoPosters['herophototif']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-edgy.webp" src="/images/colourtrax-edgy.webp" alt="Colourtrax edgy" poster={photoPosters['colourtrax_edgy']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/winterportrait.jpg" src="/images/winterportrait.jpg" alt="Winter portrait" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" poster={photoPosters['sofia']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" poster={photoPosters['juliemain']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" poster={photoPosters['frost_billboard']} />
