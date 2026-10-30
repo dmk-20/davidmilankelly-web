@@ -260,6 +260,14 @@ body.safari.view-work .film-beograd .video-poster-cover,
 html.safari body.view-work .film-beograd .video-poster-cover { display: none !important; opacity: 0 !important; pointer-events: none !important; }
 body.safari.view-work .film-beograd #beograd-video,
 html.safari body.view-work .film-beograd #beograd-video { display: block !important; visibility: visible !important; z-index: 1; }
+/* Keep the blur cover over Safari's white video layer until a frame is playing */
+html.safari .grid-image-inner-wrapper:not(.full-loaded) .grid-blur-poster,
+body.safari .grid-image-inner-wrapper:not(.full-loaded) .grid-blur-poster {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  z-index: 4;
+}
 /* Hide Safari fallback thumbnails so video loops always show (desktop); mobile uses poster-only CSS */
 .film-deja-vu .dejavu-safari-thumb,
 .film-starling .starling-safari-thumb,
@@ -602,7 +610,7 @@ body.view-info .site-instagram { display: none; }
   width: 100%;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  background: #f0f0f0; /* Placeholder background */
+  background: transparent;
 }
 
 .grid-image-inner-wrapper {
@@ -1504,23 +1512,39 @@ body.view-photo #photo-lightbox.open .photo-lightbox-next { display: flex !impor
 /* ============================================================
    BLUR PLACEHOLDER LOADING
    ============================================================ */
-/* Blur poster: sits above img and video, fades out when content is ready */
+/* Blur poster: covering layer above video. Blur lives on ::after so this
+   element stays an unfiltered compositor layer (Safari video overlays ignore
+   filtered siblings and otherwise flash white before the first frame). */
 .grid-image .grid-blur-poster {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: 50% 50%;
-  z-index: 2;
+  z-index: 4;
+  overflow: hidden;
+  opacity: 1;
+  pointer-events: none;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: opacity 0.5s ease;
+}
+.grid-image .grid-blur-poster::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: 50% 50%;
   filter: blur(20px);
   transform: scale(1.12);
-  transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 .grid-image-inner-wrapper.full-loaded .grid-blur-poster {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Full video — fades in under poster, poster fades out simultaneously */
+/* Full video — stays hidden until a decoded frame is actually playing */
 .grid-image .grid-loop-video {
   position: absolute;
   inset: 0;
@@ -1532,6 +1556,9 @@ body.view-photo #photo-lightbox.open .photo-lightbox-next { display: flex !impor
   opacity: 0;
   transition: opacity 0.5s ease;
   z-index: 1;
+}
+.grid-image-inner-wrapper:not(.full-loaded) .grid-loop-video {
+  opacity: 0 !important;
 }
 .grid-image-inner-wrapper.full-loaded .grid-loop-video {
   opacity: 1;

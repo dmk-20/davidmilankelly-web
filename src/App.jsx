@@ -404,10 +404,13 @@ export default function App() {
           background: transparent;
           -webkit-tap-highlight-color: transparent;
         }
-        .grid-image-inner-wrapper, video {
+        .grid-image-inner-wrapper {
           -webkit-transform: translateZ(0);
           transform: translateZ(0);
-          will-change: transform;
+        }
+        .grid-image-inner-wrapper.full-loaded video {
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
         }
@@ -416,8 +419,6 @@ export default function App() {
       document.head.appendChild(style)
 
       document.querySelectorAll('video').forEach(video => {
-        video.style.webkitTransform = 'translateZ(0)'
-        video.style.transform = 'translateZ(0)'
         video.muted = true
         video.setAttribute('muted', '')
         video.removeAttribute('controls')
@@ -473,6 +474,31 @@ export default function App() {
       if (mp4?.src) video.src = mp4.src
     }
 
+    const revealWhenFrameReady = (video, wrapper) => {
+      if (!wrapper || video.dataset.revealStarted) return
+      video.dataset.revealStarted = '1'
+
+      const reveal = () => {
+        if (!wrapper.isConnected || wrapper.classList.contains('full-loaded')) return
+        wrapper.classList.add('full-loaded')
+      }
+
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        video.requestVideoFrameCallback(() => {
+          requestAnimationFrame(reveal)
+        })
+        return
+      }
+
+      const onTimeUpdate = () => {
+        if (video.currentTime > 0 && !video.paused) {
+          video.removeEventListener('timeupdate', onTimeUpdate)
+          requestAnimationFrame(reveal)
+        }
+      }
+      video.addEventListener('timeupdate', onTimeUpdate)
+    }
+
     const loadVideo = (video) => {
       if (video.dataset.loadStarted) return
       video.dataset.loadStarted = '1'
@@ -480,24 +506,28 @@ export default function App() {
       const wrapper = video.closest('.grid-image-inner-wrapper')
       applyPreferredSources(video)
 
-      if (!video.src && !video.querySelector('source')) {
-        wrapper?.classList.add('full-loaded')
-        return
+      const posterEl = wrapper?.querySelector('.grid-blur-poster')
+      if (posterEl && !video.getAttribute('poster')) {
+        const bg = posterEl.style.backgroundImage
+        const match = bg && bg.match(/url\(["']?(.*?)["']?\)/)
+        if (match?.[1]) video.setAttribute('poster', match[1])
       }
+
+      if (!video.src && !video.querySelector('source')) return
 
       let playbackStarted = false
       const startPlayback = () => {
         if (playbackStarted) return
         playbackStarted = true
+
+        const onPlaying = () => revealWhenFrameReady(video, wrapper)
+        video.addEventListener('playing', onPlaying, { once: true })
         resumeLoop(video)
-        wrapper?.classList.add('full-loaded')
+        if (!video.paused && video.readyState >= 2) onPlaying()
       }
 
       video.addEventListener('canplaythrough', startPlayback, { once: true })
       video.addEventListener('canplay', startPlayback, { once: true })
-      video.addEventListener('error', () => {
-        wrapper?.classList.add('full-loaded')
-      }, { once: true })
 
       video.preload = 'auto'
       video.load()
@@ -642,12 +672,11 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/1.jpg" src="/images/1.jpg" poster={photoPosters['1']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/3.jpg" src="/images/3.jpg" poster={photoPosters['3']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/billboard-frost-children.png" src="/images/billboard-frost-children.png" alt="Billboard frost children" poster={photoPosters['billboard_frost_children']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" poster={photoPosters['2']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/catfish-parkinglot.jpg" src="/images/catfish-parkinglot.jpg" alt="Catfish parking lot" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" poster={photoPosters['catherine']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone1.jpg" src="/images/feromone1.jpg" alt="Feromone" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/winterportrait.jpg" src="/images/winterportrait.jpg" alt="Winter portrait" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone4.jpg" src="/images/feromone4.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2girls-from-hero-jpg.webp" src="/images/2girls-from-hero-jpg.webp" alt="2 girls from hero" poster={photoPosters['2girls_from_hero_jpg']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" poster={photoPosters['herophototif']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-edgy.webp" src="/images/colourtrax-edgy.webp" alt="Colourtrax edgy" poster={photoPosters['colourtrax_edgy']} />
@@ -655,6 +684,11 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" poster={photoPosters['sofia']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" poster={photoPosters['juliemain']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" poster={photoPosters['frost_billboard']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/catfish-parkinglot.jpg" src="/images/catfish-parkinglot.jpg" alt="Catfish parking lot" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" poster={photoPosters['2']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone-sava.jpg" src="/images/feromone-sava.jpg" alt="Feromone Sava" />
         </div>
 
         <a
