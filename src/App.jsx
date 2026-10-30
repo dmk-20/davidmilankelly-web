@@ -675,6 +675,8 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" poster={photoPosters['catherine']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone1.jpg" src="/images/feromone1.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone5.jpg" src="/images/feromone5.jpg" alt="Feromone" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone6.jpg" src="/images/feromone6.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/winterportrait.jpg" src="/images/winterportrait.jpg" alt="Winter portrait" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
