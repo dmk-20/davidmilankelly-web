@@ -676,19 +676,13 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone1.jpg" src="/images/feromone1.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/winterportrait.jpg" src="/images/winterportrait.jpg" alt="Winter portrait" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone4.jpg" src="/images/feromone4.jpg" alt="Feromone" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2girls-from-hero-jpg.webp" src="/images/2girls-from-hero-jpg.webp" alt="2 girls from hero" poster={photoPosters['2girls_from_hero_jpg']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" poster={photoPosters['herophototif']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-edgy.webp" src="/images/colourtrax-edgy.webp" alt="Colourtrax edgy" poster={photoPosters['colourtrax_edgy']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/colourtrax-cloe.webp" src="/images/colourtrax-cloe.webp" alt="Colourtrax cloe" poster={photoPosters['colourtrax_cloe']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" poster={photoPosters['sofia']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" poster={photoPosters['juliemain']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" poster={photoPosters['frost_billboard']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/catfish-parkinglot.jpg" src="/images/catfish-parkinglot.jpg" alt="Catfish parking lot" />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2.jpg" src="/images/2.jpg" poster={photoPosters['2']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
-          <PhotoItem className="photo-tab-only" photoSrc="/images/feromone-sava.jpg" src="/images/feromone-sava.jpg" alt="Feromone Sava" />
         </div>
 
         <a
