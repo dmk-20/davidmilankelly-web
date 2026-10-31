@@ -104,6 +104,7 @@ export default function App() {
 
       const isBeograd = id === 'pR-9xte4bgg' || link.classList.contains('film-beograd')
       const isDejaVu = id === '799266927' || link.classList.contains('film-deja-vu')
+      const isHeadOverHeels = id === '1240057296' || link.classList.contains('film-hoh')
       const isComingSoon = type === 'coming-soon'
       const projectName = isComingSoon
         ? (link.getAttribute('title') ||
@@ -122,7 +123,7 @@ export default function App() {
         const src = type === 'youtube'
           ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
           : type === 'vimeo'
-            ? `https://player.vimeo.com/video/${id}?autoplay=1`
+            ? `https://player.vimeo.com/video/${id}?autoplay=1${isHeadOverHeels ? '&muted=0' : ''}`
             : ''
 
         if (!src) return false
@@ -146,6 +147,17 @@ export default function App() {
           if (thumbWrap) thumbWrap.addEventListener('click', (e) => { if (e.target === thumbWrap || e.target.tagName === 'IMG') startBeogradVideo() })
         } else {
           embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+          if (isHeadOverHeels) {
+            const iframe = embed.querySelector('iframe')
+            const unmute = () => {
+              iframe?.contentWindow?.postMessage({ method: 'setMuted', value: false }, 'https://player.vimeo.com')
+              iframe?.contentWindow?.postMessage({ method: 'setVolume', value: 1 }, 'https://player.vimeo.com')
+            }
+            iframe?.addEventListener('load', () => {
+              unmute()
+              window.setTimeout(unmute, 500)
+            })
+          }
         }
       }
 
@@ -316,18 +328,84 @@ export default function App() {
     const resumeLoop = (video) => {
       if (!video?.isConnected) return
       video.muted = true
+      video.defaultMuted = true
+      video.playsInline = true
       video.setAttribute('muted', '')
+      video.setAttribute('playsinline', '')
+      video.setAttribute('webkit-playsinline', '')
       if (video.readyState >= 2) {
         video.play().catch(() => {})
       }
     }
 
+    // iOS Low Power Mode skips the native loop attribute and pauses the video.
+    // Restart it from script whenever it stalls or reaches the end.
+    const keepLooping = (video) => {
+      if (video.dataset.loopKeeper) return
+      video.dataset.loopKeeper = '1'
+
+      let lastKick = 0
+      let lastTime = -1
+      let lastAdvance = performance.now()
+
+      const shouldRun = () => {
+        if (!video.isConnected || document.hidden) return false
+        if (isFeaturedWorkLoop(video)) return true
+        const rect = video.getBoundingClientRect()
+        return rect.bottom > -300 && rect.top < window.innerHeight + 300
+      }
+
+      const kick = () => {
+        if (video.dataset.holdLoop || !shouldRun()) return
+        const now = performance.now()
+        if (now - lastKick < 400) return
+        lastKick = now
+        video.muted = true
+        video.defaultMuted = true
+        video.playsInline = true
+        if (Number.isFinite(video.duration) && video.duration > 0 && video.currentTime >= video.duration - 0.3) {
+          try { video.currentTime = 0 } catch (e) {}
+        }
+        const pending = video.play()
+        if (pending && typeof pending.catch === 'function') pending.catch(() => {})
+      }
+
+      video.addEventListener('ended', kick)
+      video.addEventListener('pause', kick)
+
+      window.setInterval(() => {
+        if (video.dataset.holdLoop || !shouldRun() || video.readyState < 2) return
+        const time = video.currentTime
+        if (time !== lastTime) {
+          lastTime = time
+          lastAdvance = performance.now()
+          return
+        }
+        if (performance.now() - lastAdvance > 800) {
+          kick()
+          lastAdvance = performance.now()
+        }
+      }, 500)
+    }
+
+    const unlockLoops = () => {
+      document.querySelectorAll('.grid-wrapper .grid-loop-video').forEach((video) => {
+        video.muted = true
+        video.playsInline = true
+        if (video.paused) video.play().catch(() => {})
+      })
+    }
+    document.addEventListener('touchstart', unlockLoops, { passive: true })
+    document.addEventListener('pointerdown', unlockLoops)
+
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const video = entry.target
         if (entry.isIntersecting) {
+          delete video.dataset.holdLoop
           resumeLoop(video)
         } else if (!isFeaturedWorkLoop(video)) {
+          video.dataset.holdLoop = '1'
           video.pause()
         }
       })
@@ -335,7 +413,7 @@ export default function App() {
 
     document.querySelectorAll('.grid-wrapper .grid-loop-video').forEach((video) => {
       videoObserver.observe(video)
-      video.addEventListener('ended', () => resumeLoop(video))
+      keepLooping(video)
     })
 
     // ===== SCROLL HANDLER =====
@@ -607,6 +685,13 @@ export default function App() {
             </video>
           </VideoGridItem>
 
+          <VideoGridItem className="film-hoh featured featured-6" href="#" videoType="vimeo" videoId="1240057296" caption="HEAD OVER HEELS">
+            <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.hoh})` }} />
+            <video className="grid-loop-video" loop muted playsInline preload="none">
+              <source src="/videos/hoh-loop.mp4" type="video/mp4" />
+            </video>
+          </VideoGridItem>
+
           <VideoGridItem className="film-stag" href="#" videoType="coming-soon" videoId="eustace-stag" caption="EUSTACE & THE STAG">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.stag})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
@@ -621,7 +706,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-starling featured featured-6" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
+          <VideoGridItem className="film-starling" href="#" videoType="youtube" videoId="H31T2RClBi4" caption="STARLING">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.starling})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/starling-loop.webm" type="video/webm" />
