@@ -104,7 +104,6 @@ export default function App() {
 
       const isBeograd = id === 'pR-9xte4bgg' || link.classList.contains('film-beograd')
       const isDejaVu = id === '799266927' || link.classList.contains('film-deja-vu')
-      const isHeadOverHeels = id === '1240057296' || link.classList.contains('film-hoh')
       const isComingSoon = type === 'coming-soon'
       const projectName = isComingSoon
         ? (link.getAttribute('title') ||
@@ -123,7 +122,7 @@ export default function App() {
         const src = type === 'youtube'
           ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
           : type === 'vimeo'
-            ? `https://player.vimeo.com/video/${id}?autoplay=1${isHeadOverHeels ? '&muted=0' : ''}`
+            ? `https://player.vimeo.com/video/${id}?autoplay=1`
             : ''
 
         if (!src) return false
@@ -147,17 +146,6 @@ export default function App() {
           if (thumbWrap) thumbWrap.addEventListener('click', (e) => { if (e.target === thumbWrap || e.target.tagName === 'IMG') startBeogradVideo() })
         } else {
           embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
-          if (isHeadOverHeels) {
-            const iframe = embed.querySelector('iframe')
-            const unmute = () => {
-              iframe?.contentWindow?.postMessage({ method: 'setMuted', value: false }, 'https://player.vimeo.com')
-              iframe?.contentWindow?.postMessage({ method: 'setVolume', value: 1 }, 'https://player.vimeo.com')
-            }
-            iframe?.addEventListener('load', () => {
-              unmute()
-              window.setTimeout(unmute, 500)
-            })
-          }
         }
       }
 
@@ -685,7 +673,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-hoh featured featured-6" href="#" videoType="vimeo" videoId="1240057296" caption="HEAD OVER HEELS">
+          <VideoGridItem className="film-hoh featured featured-6" href="#" videoType="youtube" videoId="7Cp3wNfgEss" caption="HEAD OVER HEELS">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.hoh})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/hoh-loop.mp4" type="video/mp4" />
