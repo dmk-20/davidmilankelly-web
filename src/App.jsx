@@ -85,6 +85,77 @@ export default function App() {
     }
 
     // ===== VIDEO PLAYBACK =====
+    let youtubePlayer = null
+    let youtubeMountGeneration = 0
+
+    function destroyYoutubePlayer() {
+      youtubeMountGeneration += 1
+      const player = youtubePlayer
+      youtubePlayer = null
+      if (player && typeof player.destroy === 'function') {
+        try { player.destroy() } catch (e) {}
+      }
+    }
+
+    function loadYoutubeApi() {
+      if (window.YT && window.YT.Player) return Promise.resolve(window.YT)
+      if (window.__ytApiPromise) return window.__ytApiPromise
+      window.__ytApiPromise = new Promise((resolve) => {
+        const previous = window.onYouTubeIframeAPIReady
+        window.onYouTubeIframeAPIReady = () => {
+          if (typeof previous === 'function') previous()
+          resolve(window.YT)
+        }
+        const tag = document.createElement('script')
+        tag.src = 'https://www.youtube.com/iframe_api'
+        document.head.appendChild(tag)
+      })
+      return window.__ytApiPromise
+    }
+
+    function mountYoutubeEmbed(embed, videoId) {
+      destroyYoutubePlayer()
+      const generation = youtubeMountGeneration
+      const frameId = 'playback-youtube-frame'
+      const origin = encodeURIComponent(window.location.origin)
+      const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&cc_load_policy=0&iv_load_policy=3&enablejsapi=1&playsinline=1&origin=${origin}`
+      embed.innerHTML = `<iframe id="${frameId}" src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+
+      loadYoutubeApi().then((YT) => {
+        if (generation !== youtubeMountGeneration) return
+        if (!document.getElementById(frameId)) return
+        let allowCaptions = false
+        let captionGuardStarted = false
+        const turnCaptionsOff = (player) => {
+          if (allowCaptions) return
+          try {
+            const options = typeof player.getOptions === 'function' ? player.getOptions() : null
+            if (!options || options.indexOf('captions') === -1) return
+            player.setOption('captions', 'track', {})
+          } catch (e) {}
+        }
+        youtubePlayer = new YT.Player(frameId, {
+          events: {
+            onReady: (event) => turnCaptionsOff(event.target),
+            onApiChange: (event) => turnCaptionsOff(event.target),
+            onStateChange: (event) => {
+              if (event.data !== YT.PlayerState.PLAYING || captionGuardStarted) return
+              captionGuardStarted = true
+              const started = Date.now()
+              const timer = window.setInterval(() => {
+                if (generation !== youtubeMountGeneration || Date.now() - started > 2000) {
+                  allowCaptions = true
+                  window.clearInterval(timer)
+                  return
+                }
+                turnCaptionsOff(event.target)
+              }, 200)
+            },
+          },
+        })
+      }).catch(() => {})
+    }
+
     window.openVideoPlayback = function(link) {
       const type = link.getAttribute('data-video-type')
       const id = link.getAttribute('data-video-id')
@@ -117,17 +188,11 @@ export default function App() {
               (link.querySelector('.film-item-caption') && link.querySelector('.film-item-caption').textContent) || '')
 
       if (isComingSoon) {
+        destroyYoutubePlayer()
         embed.innerHTML = `<div class="playback-coming-soon" aria-live="polite"><span>coming soon</span></div>`
-      } else {
-        const src = type === 'youtube'
-          ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3`
-          : type === 'vimeo'
-            ? `https://player.vimeo.com/video/${id}?autoplay=1`
-            : ''
-
-        if (!src) return false
-
-        if (isBeograd && type === 'youtube') {
+      } else if (type === 'youtube') {
+        if (isBeograd) {
+          destroyYoutubePlayer()
           embed.innerHTML = `
             <div class="playback-beograd-thumb">
               <img src="/images/beograd-16x9-cover.jpg" alt="">
@@ -139,14 +204,20 @@ export default function App() {
           const playBtn = embed.querySelector('.playback-beograd-play')
 
           function startBeogradVideo() {
-            embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+            mountYoutubeEmbed(embed, id)
           }
 
           if (playBtn) playBtn.addEventListener('click', (e) => { e.stopPropagation(); startBeogradVideo() })
           if (thumbWrap) thumbWrap.addEventListener('click', (e) => { if (e.target === thumbWrap || e.target.tagName === 'IMG') startBeogradVideo() })
         } else {
-          embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+          mountYoutubeEmbed(embed, id)
         }
+      } else if (type === 'vimeo') {
+        destroyYoutubePlayer()
+        const src = `https://player.vimeo.com/video/${id}?autoplay=1`
+        embed.innerHTML = `<iframe src="${src}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;"></iframe>`
+      } else {
+        return false
       }
 
       if (captionEl) {
@@ -192,6 +263,7 @@ export default function App() {
 
       overlay.classList.remove('open', 'playback-overlay--work', 'playback-overlay--beograd', 'playback-overlay--coming-soon')
       overlay.setAttribute('aria-hidden', 'true')
+      destroyYoutubePlayer()
       if (embed) embed.innerHTML = ''
       if (caption) caption.innerHTML = ''
       if (overlayCopy) overlayCopy.innerHTML = ''
