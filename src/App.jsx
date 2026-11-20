@@ -19,6 +19,17 @@ export default function App() {
     const videoItems = Array.from(document.querySelectorAll('.grid-item[data-video-type]'))
     let currentVideoIndex = 0
 
+    function visibleVideosInCellOrder() {
+      return videoItems
+        .filter(el => el.offsetParent !== null)
+        .sort((a, b) => {
+          const ra = a.getBoundingClientRect()
+          const rb = b.getBoundingClientRect()
+          if (Math.abs(ra.top - rb.top) > 8) return ra.top - rb.top
+          return ra.left - rb.left
+        })
+    }
+
     // ===== SIMPLE VIEW MANAGER =====
     const viewLabels = { work: 'featured', film: 'film', photo: 'photography' }
     const labelEl = document.getElementById('page-section-label')
@@ -169,7 +180,7 @@ export default function App() {
 
       if (!overlay || !embed) return false
 
-      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      const visibleVideoItems = visibleVideosInCellOrder()
       const vIdx = visibleVideoItems.indexOf(link)
       if (vIdx !== -1) currentVideoIndex = vIdx
 
@@ -346,14 +357,14 @@ export default function App() {
     })
 
     document.querySelector('.playback-prev')?.addEventListener('click', () => {
-      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      const visibleVideoItems = visibleVideosInCellOrder()
       if (!visibleVideoItems.length) return
       currentVideoIndex = (currentVideoIndex - 1 + visibleVideoItems.length) % visibleVideoItems.length
       window.openVideoPlayback(visibleVideoItems[currentVideoIndex])
     })
 
     document.querySelector('.playback-next')?.addEventListener('click', () => {
-      const visibleVideoItems = videoItems.filter(el => el.offsetParent !== null)
+      const visibleVideoItems = visibleVideosInCellOrder()
       if (!visibleVideoItems.length) return
       currentVideoIndex = (currentVideoIndex + 1) % visibleVideoItems.length
       window.openVideoPlayback(visibleVideoItems[currentVideoIndex])
@@ -708,7 +719,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="grid-item-aspect-3-2 film-deja-vu featured featured-2" href="#" videoType="vimeo" videoId="799266927" caption="DEJA VU LIQUOR – SHORT FILM">
+          <VideoGridItem className="grid-item-aspect-3-2 film-deja-vu featured featured-5" href="#" videoType="vimeo" videoId="799266927" caption="DEJA VU LIQUOR – SHORT FILM">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.dejavu})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/dejavu-loop.webm" type="video/webm" />
@@ -716,7 +727,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-chalice featured featured-3" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
+          <VideoGridItem className="film-chalice featured featured-2" href="#" videoType="youtube" videoId="g7MHFBu0PI8" caption="MY CHALICE">
             <div className="grid-blur-poster" style={{ backgroundImage: 'url(https://img.youtube.com/vi/g7MHFBu0PI8/maxresdefault.jpg)' }} />
             <video
               className="grid-loop-video"
@@ -738,7 +749,7 @@ export default function App() {
             </video>
           </VideoGridItem>
 
-          <VideoGridItem className="film-djdave featured featured-5" href="#" videoType="vimeo" videoId="1215676076" caption="DJ DAVE – NEXT TO U">
+          <VideoGridItem className="film-djdave featured featured-3" href="#" videoType="vimeo" videoId="1215676076" caption="DJ DAVE – NEXT TO U">
             <div className="grid-blur-poster" style={{ backgroundImage: `url(${videoPosters.djdave})` }} />
             <video className="grid-loop-video" loop muted playsInline preload="none">
               <source src="/videos/djdave-loop.mp4" type="video/mp4" />
@@ -822,6 +833,7 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone5.jpg" src="/images/feromone5.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone6.jpg" src="/images/feromone6.jpg" alt="Feromone" />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/avalon1.jpg" src="/images/avalon1.jpg" alt="Avalon" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/2girlsofficial.png" src="/images/2girlsofficial.png" alt="2 girls official" poster={photoPosters['2girlsofficial']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/hongkonganime.JPG" src="/images/hongkonganime.JPG" alt="Hong Kong anime" poster={photoPosters['hongkonganime']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/herophototif.png" src="/images/herophototif.png" alt="Hero" poster={photoPosters['herophototif']} />
@@ -830,6 +842,7 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/sofia.webp" src="/images/sofia.webp" alt="Sofia" poster={photoPosters['sofia']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/JULIEmain.webp" src="/images/JULIEmain.webp" alt="Sofia" poster={photoPosters['juliemain']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/frost-billboard.webp" src="/images/frost-billboard.webp" poster={photoPosters['frost_billboard']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/trevor.jpg" src="/images/trevor.jpg" alt="Trevor" />
         </div>
 
         <a
