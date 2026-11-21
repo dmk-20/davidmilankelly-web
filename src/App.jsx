@@ -829,6 +829,7 @@ export default function App() {
           <PhotoItem className="photo-tab-only" photoSrc="/images/3.jpg" src="/images/3.jpg" poster={photoPosters['3']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/billboard-frost-children.png" src="/images/billboard-frost-children.png" alt="Billboard frost children" poster={photoPosters['billboard_frost_children']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/catherine.webp" src="/images/catherine.webp" alt="Catherine" poster={photoPosters['catherine']} />
+          <PhotoItem className="photo-tab-only" photoSrc="/images/brooks.jpg" src="/images/brooks.jpg" alt="Brooks" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone1.jpg" src="/images/feromone1.jpg" alt="Feromone" />
           <PhotoItem className="photo-tab-only" photoSrc="/images/julie-nme-images.png" src="/images/julie-nme-images.png" alt="Julie NME images" poster={photoPosters['julie_nme_images']} />
           <PhotoItem className="photo-tab-only" photoSrc="/images/feromone5.jpg" src="/images/feromone5.jpg" alt="Feromone" />

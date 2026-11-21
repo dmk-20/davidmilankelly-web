@@ -545,15 +545,10 @@ body.view-info .info-placeholder {
   padding-top: var(--instagram-gap);
   padding-bottom: max(var(--instagram-gap), env(safe-area-inset-bottom));
   color: #000;
-  opacity: 0.55;
-  transition: opacity 0.2s var(--transition-smooth);
+  opacity: 1;
 }
 .site-instagram svg {
   display: block;
-}
-.site-instagram:hover,
-.site-instagram:focus-visible {
-  opacity: 1;
 }
 body.view-info .site-instagram { display: none; }
 
