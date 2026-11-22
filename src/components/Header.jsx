@@ -3,7 +3,7 @@ export default function Header() {
     <header id="header">
       <div className="header-title">
         <a href="#">david milan kelly</a>
-        <p className="header-subheader">director. writer.</p>
+        <p className="header-subheader">director. photographer.</p>
       </div>
       <div className="header-nav-wrap">
         <button type="button" className="header-menu-btn" aria-label="Menu" aria-expanded="false">
